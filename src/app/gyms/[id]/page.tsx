@@ -253,12 +253,12 @@ import { Tab } from '@headlessui/react';
 import { 
   MapPinIcon, 
  
-  ClockIcon, 
+  // ClockIcon, 
   CheckIcon, 
   ChevronLeftIcon, 
   ChevronRightIcon 
 } from '@heroicons/react/24/outline';
-
+import Image from 'next/image';
 export default function GymDetailsPage() {
   const { id } = useParams();
   const { user } = useAuth();
@@ -351,10 +351,12 @@ export default function GymDetailsPage() {
                   index === currentImageIndex ? 'opacity-100' : 'opacity-0'
                 }`}
               >
-                <img
+                <Image
                   src={image}
                   alt={`${gym.name} ${index + 1}`}
-                  className="w-full h-full object-cover"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-lg"
                 />
               </div>
             ))}

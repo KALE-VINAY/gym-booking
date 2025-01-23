@@ -72,12 +72,13 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showValidationHints, setShowValidationHints] = useState(false);
   const [formData, setFormData] = useState({
@@ -115,8 +116,12 @@ const Login = () => {
     try {
       await googleSignIn();
       router.push("/dashboard");
-    } catch (error: any) {
-      setErrorMessage(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage('An unknown error occurred');
+      }
     } finally {
       setLoading(false);
     }
@@ -140,8 +145,12 @@ const Login = () => {
         await signIn(formData.email, formData.password);
       }
       router.push("/dashboard");
-    } catch (error: any) {
-      setErrorMessage(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage('An unknown error occurred');
+      }
     } finally {
       setLoading(false);
     }
@@ -150,11 +159,11 @@ const Login = () => {
   return (
     <div className="relative min-h-screen flex items-center justify-center">
       <div className="absolute inset-0 z-0">
-        <img 
-          className="w-full h-full object-cover" 
-          src='https://plus.unsplash.com/premium_photo-1661920538067-c48451160c72?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' 
-          alt="bg img"
-        />
+                <Image 
+                  layout="fill" 
+                  src={'https://plus.unsplash.com/premium_photo-1661920538067-c48451160c72?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'}
+                  alt="Background"
+                />
       </div>
 
       <div className="relative z-10 w-full max-w-md px-4">

@@ -9,7 +9,7 @@ import {
   query,
   where,
   updateDoc,
-  Timestamp
+  // Timestamp
 } from 'firebase/firestore';
 import { Booking, GymPlan } from '@/types';
 

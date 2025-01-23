@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
-import { useState } from 'react';
+// import { useState } from 'react';
 import { Menu } from '@headlessui/react';
 import { UserCircleIcon } from '@heroicons/react/24/outline';
 

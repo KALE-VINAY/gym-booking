@@ -109,6 +109,7 @@ import { gymService } from '@/services/gymService';
 import LocationFilter from '@/components/LocationFilter';
 import Link from 'next/link';
 import { MapPinIcon, CalendarIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
 
 export default function GymsPage() {
   const [gyms, setGyms] = useState<Gym[]>([]);
@@ -159,10 +160,11 @@ export default function GymsPage() {
                 >
                   <div className="bg-white rounded-lg shadow overflow-hidden">
                     <div className="h-48 w-full relative">
-                      <img
+                      <Image
                         src={gym.images[0]}
                         alt={gym.name}
-                        className="w-full h-full object-cover"
+                        layout="fill"
+                        objectFit="cover"
                       />
                     </div>
                     <div className="p-4">
