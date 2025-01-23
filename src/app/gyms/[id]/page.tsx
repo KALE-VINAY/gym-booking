@@ -507,14 +507,14 @@ export default function GymDetailsPage() {
                     selected={startDate}
                     onChange={(date) => setStartDate(date)}
                     minDate={new Date()}
-                    className="w-full p-2 border rounded-lg text-sm"
+                    className="w-full p-2 cursor-pointer border rounded-lg text-sm"
                     placeholderText="Select start date"
                   />
                 </div>
 
                 <button
                   onClick={handleBooking}
-                  className="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition-colors text-sm md:text-base"
+                  className="w-full bg-indigo-600 text-white cursor-pointer py-3 rounded-lg hover:bg-indigo-700 transition-colors text-sm md:text-base"
                   disabled={!selectedPlan || !startDate}
                 >
                   Book Now

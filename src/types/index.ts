@@ -46,7 +46,7 @@ export interface Gym {
   export interface GymPlan {
     id: string;
     name: string;
-    duration: 'day' | '3months' | '6months' | 'year';
+    duration: 'day'|'1Week' | '3months' | '6months' | 'year';
     price: number;
   }
   
