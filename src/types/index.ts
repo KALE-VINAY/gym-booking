@@ -58,7 +58,9 @@ export interface Gym {
     startDate: Date;
     endDate: Date;
     status: 'active' | 'completed' | 'cancelled';
+    otp: string; // Added otp property
     userDetails: {
+      id: string;
       name: string;
       email: string;
     };

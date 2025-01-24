@@ -39,6 +39,8 @@ export const bookingService = {
           break;
       }
 
+      const otp = this.generateOTP(); // Generate OTP
+
       const bookingData: Omit<Booking, 'id'> = {
         userId,
         gymId,
@@ -46,7 +48,8 @@ export const bookingService = {
         startDate: startDate,
         endDate: endDate,
         status: 'active',
-        userDetails
+        otp, // Include OTP
+        userDetails: { ...userDetails, id: userId } // Include user ID
       };
 
       const bookingRef = await addDoc(collection(db, 'bookings'), bookingData);
@@ -98,5 +101,12 @@ export const bookingService = {
       console.error('Error updating booking status:', error);
       throw error;
     }
-  }
+  },
+    // New functionality: Generate OTP
+    generateOTP(): string {
+      return Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
+    }
+ 
+
+
 };

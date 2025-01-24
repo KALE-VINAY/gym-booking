@@ -245,6 +245,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { gymService } from '@/services/gymService';
+import { bookingService } from '@/services/bookingService'; // New Service
 import { Gym, GymPlan } from '@/types';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
@@ -259,6 +260,7 @@ import {
   ChevronRightIcon 
 } from '@heroicons/react/24/outline';
 import Image from 'next/image';
+
 export default function GymDetailsPage() {
   const { id } = useParams();
   const { user } = useAuth();
@@ -288,6 +290,11 @@ export default function GymDetailsPage() {
     }
   }, [id]);
 
+  const generateOTP = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString(); // Generate 6-digit OTP
+  };
+
+
   const handleBooking = async () => {
     if (!user) {
       toast.error('Please login to book a session');
@@ -299,9 +306,31 @@ export default function GymDetailsPage() {
       return;
     }
 
+    const otp = generateOTP();
+    const bookingDetails = {
+      userId: user.uid,
+      gymId: gym?.id,
+      planId: selectedPlan.id,
+      startDate: startDate.toISOString(),
+      status: 'pending',
+      otp,
+      userDetails: {
+        name: user.displayName,
+        email: user.email,
+      },
+    };
+
     try {
       // Implement booking logic here
+      await bookingService.createBooking(
+        user.uid,
+        gym?.id as string,
+        selectedPlan,
+        startDate,
+        { name: user.displayName || '', email: user.email || '' }
+      ); // Save booking to Firebase
       toast.success('Booking successful!');
+      toast.success(`Your OTP: ${otp}`);
     } catch (error) {
       console.error('Error creating booking:', error);
       toast.error('Failed to create booking');

@@ -537,12 +537,12 @@ export default function RegisterGymPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-center">Register Your Gym</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6   text-gray-800 text-center">Register Your Gym</h1>
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Basic Information */}
         <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">Basic Information</h2>
+          <h2 className="text-xl font-semibold mb-4  text-gray-800 ">Basic Information</h2>
           
           <div className="space-y-4">
             <div>
@@ -554,7 +554,7 @@ export default function RegisterGymPage() {
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full p-2 border rounded-md text-sm sm:text-base"
+                className="w-full p-2 text-gray-800 border rounded-md text-sm sm:text-base"
               />
             </div>
 
@@ -566,7 +566,7 @@ export default function RegisterGymPage() {
                 required
                 value={formData.location}
                 onChange={(e) => setFormData({ ...formData, location: e.target.value as Location })}
-                className="w-full p-2 border rounded-md text-sm sm:text-base"
+                className="w-full p-2 text-gray-800 border rounded-md text-sm sm:text-base"
               >
                 <option value="">Select Location</option>
                 {locationOptions.map((location) => (
@@ -579,7 +579,7 @@ export default function RegisterGymPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Google Maps Link
+                Google Maps location Link
               </label>
               <input
                 type="url"
@@ -588,8 +588,8 @@ export default function RegisterGymPage() {
                 placeholder="Paste Google Maps link here"
                 className="w-full p-2 border rounded-md text-sm sm:text-base"
               />
-              <p className="text-xs text-gray-500 mt-1">
-                Optional: Provide a direct Google Maps link to your gym location
+              <p className="text-xs text-blue-500 mt-1">
+                 Provide a direct Google Maps link to your gym location
               </p>
             </div>
           </div>
@@ -597,7 +597,7 @@ export default function RegisterGymPage() {
 
         {/* Facilities */}
         <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">Facilities</h2>
+          <h2 className="text-xl text-gray-700 font-semibold mb-4">Facilities</h2>
           
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
             {facilityOptions.map((facility) => (
@@ -608,7 +608,7 @@ export default function RegisterGymPage() {
                   onChange={() => handleFacilityToggle(facility)}
                   className="rounded text-indigo-600"
                 />
-                <span>{facility}</span>
+                <span className='text-gray-800'>{facility}</span>
               </label>
             ))}
           </div>
@@ -616,7 +616,7 @@ export default function RegisterGymPage() {
 
         {/* Equipment */}
         <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">Equipment</h2>
+          <h2 className="text-xl   text-gray-800 font-semibold mb-4">Equipment</h2>
           
           <div className="space-y-2">
             {formData.equipment.map((item, index) => (
@@ -644,14 +644,14 @@ export default function RegisterGymPage() {
 
         {/* Images */}
         <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">Gym Images</h2>
+          <h2 className="text-xl font-semibold  text-gray-800  mb-4">Gym Images</h2>
           
           <input
             type="file"
             accept="image/*"
             multiple
             onChange={handleImageChange}
-            className="w-full text-sm sm:text-base"
+            className="w-full text-gray-800 text-sm sm:text-base"
           />
           <p className="text-xs sm:text-sm text-gray-500 mt-2">
             Please upload at least 3 images of your gym (max 4)
@@ -660,7 +660,7 @@ export default function RegisterGymPage() {
 
         {/* Schedule */}
         <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">Operating Hours</h2>
+          <h2 className="text-xl font-semibold  text-gray-800  mb-4">Operating Hours</h2>
           
           {Object.entries(formData.schedule).map(([day, schedule]) => (
             <div key={day} className="grid grid-cols-3 gap-2 sm:gap-4 mb-4 items-center">
@@ -675,7 +675,7 @@ export default function RegisterGymPage() {
                   )}
                   className="mr-2"
                 />
-                <span className="capitalize text-sm sm:text-base">{day}</span>
+                <span className="capitalize text-sm text-gray-800 sm:text-base">{day}</span>
               </div>
               
               <input
@@ -687,7 +687,7 @@ export default function RegisterGymPage() {
                   e.target.value
                 )}
                 disabled={!schedule.isOpen}
-                className="p-2 border rounded-md text-sm sm:text-base"
+                className="p-2 border text-gray-800 rounded-md text-sm sm:text-base"
               />
               
               <input
@@ -699,7 +699,7 @@ export default function RegisterGymPage() {
                   e.target.value
                 )}
                 disabled={!schedule.isOpen}
-                className="p-2 border rounded-md text-sm sm:text-base"
+                className="p-2 border text-gray-800 rounded-md text-sm sm:text-base"
               />
             </div>
           ))}
@@ -707,12 +707,12 @@ export default function RegisterGymPage() {
 
         {/* Plans */}
         <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">Membership Plans</h2>
+          <h2 className="text-xl font-semibold  text-gray-800  mb-4">Membership Plans</h2>
           
           <div className="space-y-4">
             {formData.plans.map((plan) => (
               <div key={plan.id} className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                <span className="w-full sm:w-32 text-sm sm:text-base">{plan.name}</span>
+                <span className="w-full sm:w-32 text-sm   text-gray-800 sm:text-base">{plan.name}</span>
                 <input
                   type="number"
                   value={plan.price}
@@ -725,7 +725,7 @@ export default function RegisterGymPage() {
                     setFormData({ ...formData, plans });
                   }}
                   placeholder="Price"
-                  className="w-full p-2 border rounded-md text-sm sm:text-base"
+                  className="w-full p-2 border  text-gray-800  rounded-md text-sm sm:text-base"
                   min="0"
                 />
               </div>
