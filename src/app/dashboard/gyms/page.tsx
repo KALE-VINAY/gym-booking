@@ -60,7 +60,7 @@ export default function MyGymsPage() {
             <p className="text-gray-600    mb-4">{gym.location}</p>
             <div className="flex space-x-2">
               <Link 
-                href={`/dashboard/gyms/${gym.id}`} 
+                href={`/gyms/${gym.id}`} 
                 className="btn btn-secondary flex-1 text-gray-800  flex items-center justify-center"
               >
                 <EyeIcon className="h-5  text-gray-800  w-5 mr-2" /> View
