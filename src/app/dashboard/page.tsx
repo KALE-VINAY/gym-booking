@@ -342,7 +342,7 @@ export default function DashboardOverview() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
+    <div className=" bg-gray-50 p-4 sm:p-8">
       <div className="container mx-auto max-w-7xl">
         <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-6 sm:mb-8">
           Dashboard Overview

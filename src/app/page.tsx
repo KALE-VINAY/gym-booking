@@ -106,15 +106,17 @@
 import { useState, useEffect } from 'react';
 import { Gym, Location } from '@/types';
 import { gymService } from '@/services/gymService';
+import { useAuth } from '@/context/AuthContext';
 import LocationFilter from '@/components/LocationFilter';
 import Link from 'next/link';
-import { MapPinIcon, CalendarIcon } from '@heroicons/react/24/outline';
+import { MapPinIcon, CalendarIcon, TicketIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 
 export default function GymsPage() {
   const [gyms, setGyms] = useState<Gym[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedLocation, setSelectedLocation] = useState<Location>('ALL');
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchGyms = async () => {
@@ -136,14 +138,25 @@ export default function GymsPage() {
     <div className="min-h-screen bg-gray-100">
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
-          <div className="mb-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">Find Gyms</h1>
-            <div className="w-64">
-              <LocationFilter
-                selectedLocation={selectedLocation}
-                onChange={setSelectedLocation}
-              />
+          <div className="mb-6 flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-4">Find Gyms</h1>
+              <div className="w-64">
+                <LocationFilter
+                  selectedLocation={selectedLocation}
+                  onChange={setSelectedLocation}
+                />
+              </div>
             </div>
+            {user && (
+              <Link 
+                href="/userbookings" 
+                className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 text-sm font-medium"
+              >
+                <TicketIcon className="h-5 w-5 mr-2" />
+                My Bookings
+              </Link>
+            )}
           </div>
 
           {loading ? (
@@ -210,4 +223,3 @@ export default function GymsPage() {
     </div>
   );
 }
-
