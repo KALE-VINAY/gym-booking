@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { bookingService } from '@/services/bookingService';
 import { gymService } from '@/services/gymService';
-import { Booking, Gym } from '@/types';
+import { Booking } from '@/types';
 import { CalendarIcon, MapPinIcon } from '@heroicons/react/24/outline';
 
 export default function UserBookingsPage() {
