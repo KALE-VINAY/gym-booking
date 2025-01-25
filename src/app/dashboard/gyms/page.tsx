@@ -6,6 +6,7 @@ import { gymService } from '@/services/gymService';
 import { Gym } from '@/types';
 import { PlusIcon, EyeIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function MyGymsPage() {
   const { user } = useAuth();
@@ -50,10 +51,12 @@ export default function MyGymsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {gyms.map(gym => (
-          <div key={gym.id} className="bg-white shadow-md rounded-lg p-6">
-            <img 
+          <div key={gym.id} className="bg-white shadow-md rounded-lg overflow-hidden">
+            <Image 
               src={gym.images[0]} 
               alt={gym.name} 
+              width={500}
+              height={300}
               className="w-full h-48 object-cover rounded-t-lg mb-4"
             />
             <h2 className="text-xl font-semibold  text-gray-800  mb-2">{gym.name}</h2>

@@ -4,11 +4,18 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { bookingService } from '@/services/bookingService';
 import { gymService } from '@/services/gymService';
-import { Booking, Gym } from '@/types';
+// import { Booking, Gym } from '@/types';
 
 export default function MembersPage() {
   const { user } = useAuth();
-  const [members, setMembers] = useState<any[]>([]);
+  interface Member {
+    id: string;
+    name: string;
+    email: string;
+    gymCount: number;
+  }
+
+  const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,7 +28,7 @@ export default function MembersPage() {
           ownerGyms.map(gym => bookingService.getGymBookings(gym.id))
         );
 
-        const uniqueMembers = memberBookings.flat().reduce((acc: any[], booking) => {
+        const uniqueMembers = memberBookings.flat().reduce((acc: Member[], booking) => {
           if (!acc.find(member => member.id === booking.userDetails.id)) {
             acc.push({
               ...booking.userDetails,

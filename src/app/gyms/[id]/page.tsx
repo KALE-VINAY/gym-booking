@@ -307,18 +307,6 @@ export default function GymDetailsPage() {
     }
 
     const otp = generateOTP();
-    const bookingDetails = {
-      userId: user.uid,
-      gymId: gym?.id,
-      planId: selectedPlan.id,
-      startDate: startDate.toISOString(),
-      status: 'pending',
-      otp,
-      userDetails: {
-        name: user.displayName,
-        email: user.email,
-      },
-    };
 
     try {
       // Implement booking logic here
