@@ -466,7 +466,7 @@ export default function DashboardOverview() {
             <table className="min-w-full text-xs sm:text-sm">
               <thead className="bg-gray-50">
                 <tr>
-                  {["Member", "Gym", "Plan", "Start Date", "Status"].map((header, index) => (
+                  {["Member", "Gym", "Plan", "Start Date","OTP", "Status"].map((header, index) => (
                     <th 
                       key={index} 
                       className="px-3 sm:px-6 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -500,6 +500,9 @@ export default function DashboardOverview() {
                       </td>
                       <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-[10px] sm:text-sm text-gray-500">
                         {startDate}
+                      </td>
+                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-[10px] sm:text-sm text-gray-500">
+                        {booking.otp}
                       </td>
                       <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-[10px] sm:text-sm text-gray-500">
                         <span className={`inline-flex items-center px-2 py-1 rounded-full text-[8px] sm:text-xs font-medium ${

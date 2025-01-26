@@ -81,7 +81,7 @@ export default function BookingsPage() {
           <table className="min-w-full text-xs sm:text-sm">
             <thead className="bg-gray-50">
               <tr>
-                {['Member', 'Gym', 'Plan', 'Start Date', 'Status'].map((header, index) => (
+                {['Member', 'Gym', 'Plan', 'Start Date','OTP', 'Status'].map((header, index) => (
                   <th
                     key={index}
                     className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -115,6 +115,9 @@ export default function BookingsPage() {
                     </td>
                     <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-500">
                       {startDate}
+                    </td>
+                    <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-500">
+                      {booking.otp}
                     </td>
                     <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
                       <span
