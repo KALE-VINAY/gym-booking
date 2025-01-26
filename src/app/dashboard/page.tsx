@@ -271,14 +271,16 @@ export default function DashboardOverview() {
     recentBookings: 0
   });
 
-  const parseCustomDate = (date: string | Date | { toDate: () => Date }): Date | null => {
-    if (!date) return null;
-    if (typeof (date as { toDate: () => Date }).toDate === 'function') {
-      return (date as { toDate: () => Date }).toDate();
-    }
-    const parsedDate = new Date(date as string | number | Date);
-    return isNaN(parsedDate.getTime()) ? null : parsedDate;
-  };
+ const parseCustomDate = (date: string | Date | { toDate?: () => Date } | null): Date | null => {
+  if (!date) return null;
+  
+  if (date && typeof date === 'object' && 'toDate' in date && typeof date.toDate === 'function') {
+    return date.toDate();
+  }
+  
+  const parsedDate = new Date(date as string | number | Date);
+  return isNaN(parsedDate.getTime()) ? null : parsedDate;
+};
 
   useEffect(() => {
     const fetchData = async () => {
