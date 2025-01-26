@@ -2,25 +2,44 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { bookingService } from '@/services/bookingService';
 import { gymService } from '@/services/gymService';
-import { Booking, Gym } from '@/types';
+import { bookingService } from '@/services/bookingService';
+import { Gym, Booking } from '@/types';
 
 export default function BookingsPage() {
   const { user } = useAuth();
-  const [bookings, setBookings] = useState<Booking[]>([]);
   const [gyms, setGyms] = useState<Gym[]>([]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Improved date parser
+  const parseCustomDate = (date: any): Date | null => {
+    if (!date) return null;
+    if (typeof date.toDate === 'function') {
+      // For Firebase Timestamp
+      return date.toDate();
+    }
+    const parsedDate = new Date(date);
+    return isNaN(parsedDate.getTime()) ? null : parsedDate;
+  };
+
   useEffect(() => {
-    const fetchBookings = async () => {
+    const fetchData = async () => {
       if (!user) return;
+
       try {
+        setLoading(true);
         const ownerGyms = await gymService.getGymsByOwner(user.uid);
         setGyms(ownerGyms);
 
         const allBookings = await Promise.all(
-          ownerGyms.map(gym => bookingService.getGymBookings(gym.id))
+          ownerGyms.map(async (gym) => {
+            const gymBookings = await bookingService.getGymBookings(gym.id);
+            return gymBookings.map((booking: Booking) => ({
+              ...booking,
+              startDate: parseCustomDate(booking.startDate),
+            }));
+          })
         );
         setBookings(allBookings.flat());
       } catch (error) {
@@ -30,59 +49,92 @@ export default function BookingsPage() {
       }
     };
 
-    fetchBookings();
+    fetchData();
   }, [user]);
 
   const getGymName = (gymId: string) => {
-    const gym = gyms.find(g => g.id === gymId);
+    const gym = gyms.find((g) => g.id === gymId);
     return gym ? gym.name : 'Unknown Gym';
   };
 
-  if (loading)
+  const getPlanName = (gymId: string, planId: string) => {
+    const gym = gyms.find((g) => g.id === gymId);
+    const plan = gym?.plans.find((p) => p.id === planId);
+    return plan ? plan.name : 'Unknown Plan';
+  };
+
+  if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      <div className="flex justify-center items-center h-screen bg-gray-100">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-600"></div>
       </div>
     );
+  }
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-2xl text-gray-800 font-bold mb-6">Bookings</h1>
-      
-      <div className="bg-white shadow-md rounded-lg overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="p-3 text-gray-800 text-left">Member</th>
-              <th className="p-3  text-gray-800 text-left">Gym</th>
-              <th className="p-3  text-gray-800 text-left">Plan</th>
-              <th className="p-3  text-gray-800 text-left">Start Date</th>
-              <th className="px-6 py-3   text-left text-sm font-medium text-gray-900">OTP</th>
-              <th className="p-3 text-gray-800  text-left">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {bookings.map(booking => (
-              <tr key={booking.id} className="border-b">
-                <td className="p-3 text-gray-800">{booking.userDetails.name}</td>
-                <td className="p-3 text-gray-800 ">{getGymName(booking.gymId)}</td>
-                <td className="p-3 text-gray-800 ">{booking.planId}</td>
-                <td className="p-3 text-gray-800 ">{new Date(booking.startDate).toLocaleDateString()}</td>
-                <td className="px-6  text-gray-800 py-4">{booking.otp}</td>
-                <td className="p-3">
-                  <span className={`
-                    px-2 py-1 rounded-full text-xs font-medium 
-                    ${booking.status === 'active' ? 'bg-green-100 text-green-800' : 
-                      booking.status === 'completed' ? 'bg-blue-100 text-blue-800' : 
-                      'bg-red-100 text-red-800'}
-                  `}>
-                    {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
-                  </span>
-                </td>
+    <div className="bg-gray-50 p-4 sm:p-8">
+      <div className="container mx-auto max-w-7xl">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-6">
+          Bookings
+        </h1>
+        <div className="bg-white rounded-xl shadow-md overflow-x-auto">
+          <table className="min-w-full text-xs sm:text-sm">
+            <thead className="bg-gray-50">
+              <tr>
+                {['Member', 'Gym', 'Plan', 'Start Date', 'Status'].map((header, index) => (
+                  <th
+                    key={index}
+                    className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    {header}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {bookings.map((booking) => {
+                const startDate =
+                  booking.startDate instanceof Date
+                    ? booking.startDate.toLocaleDateString('en-US', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                      })
+                    : 'Invalid Date';
+
+                return (
+                  <tr key={booking.id}>
+                    <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {booking.userDetails.name}
+                    </td>
+                    <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-500">
+                      {getGymName(booking.gymId)}
+                    </td>
+                    <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-500">
+                      {getPlanName(booking.gymId, booking.planId)}
+                    </td>
+                    <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-500">
+                      {startDate}
+                    </td>
+                    <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
+                      <span
+                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                          booking.status === 'active'
+                            ? 'bg-green-100 text-green-800'
+                            : booking.status === 'completed'
+                            ? 'bg-blue-100 text-blue-800'
+                            : 'bg-red-100 text-red-800'
+                        }`}
+                      >
+                        {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

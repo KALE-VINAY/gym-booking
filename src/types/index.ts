@@ -55,8 +55,8 @@ export interface Gym {
     userId: string;
     gymId: string;
     planId: string;
-    startDate: Date;
-    endDate: Date;
+    startDate: Date | null;
+    endDate: Date | null;
     status: 'active' | 'completed' | 'cancelled';
     otp: string; // Added otp property
     userDetails: {

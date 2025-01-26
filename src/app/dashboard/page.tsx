@@ -234,9 +234,8 @@
 //   );
 // }
 
-// src/app/dashboard/page.tsx
-// src/app/dashboard/page.tsx
 
+// src/app/dashboard/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -272,6 +271,15 @@ export default function DashboardOverview() {
     recentBookings: 0
   });
 
+  const parseCustomDate = (date: any): Date | null => {
+    if (!date) return null;
+    if (typeof date.toDate === 'function') {
+      return date.toDate();
+    }
+    const parsedDate = new Date(date);
+    return isNaN(parsedDate.getTime()) ? null : parsedDate;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       if (!user) return;
@@ -299,7 +307,10 @@ export default function DashboardOverview() {
           activeMembers: activeBookings.length,
           totalRevenue: revenue,
           recentBookings: flattenedBookings.filter(
-            b => new Date(b.startDate).getMonth() === new Date().getMonth()
+            b => {
+              const bookingDate = parseCustomDate(b.startDate);
+              return bookingDate && bookingDate.getMonth() === new Date().getMonth();
+            }
           ).length
         });
       } catch (error) {
@@ -321,16 +332,30 @@ export default function DashboardOverview() {
         timestamp: date.getTime()
       };
     }).reverse();
-
-    return last6Months.map(({ month, timestamp }) => ({
-      month,
-      bookings: bookings.filter(b => {
-        const bookingDate = new Date(b.startDate).getTime();
-        const nextMonth = new Date(timestamp);
-        nextMonth.setMonth(nextMonth.getMonth() + 1);
-        return bookingDate >= timestamp && bookingDate < nextMonth.getTime();
-      }).length
-    }));
+  
+    // Debug logging of booking dates
+    console.log('All Bookings:', bookings.map(b => ({
+      id: b.id,
+      startDate: b.startDate,
+      parsedDate: parseCustomDate(b.startDate)?.toLocaleString()
+    })));
+  
+    return last6Months.map(({ month, timestamp }) => {
+      const nextMonth = new Date(timestamp);
+      nextMonth.setMonth(nextMonth.getMonth() + 1);
+  
+      const monthBookings = bookings.filter(b => {
+        const bookingDate = parseCustomDate(b.startDate);
+        return bookingDate && 
+               bookingDate.getMonth() === new Date(timestamp).getMonth() &&
+               bookingDate.getFullYear() === new Date(timestamp).getFullYear();
+      });
+  
+      return {
+        month,
+        bookings: monthBookings.length
+      };
+    });
   };
 
   if (loading) {
@@ -348,7 +373,6 @@ export default function DashboardOverview() {
           Dashboard Overview
         </h1>
 
-        {/* Responsive Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {[
             { 
@@ -391,7 +415,6 @@ export default function DashboardOverview() {
           ))}
         </div>
 
-        {/* Bookings Chart - Responsive Height */}
         <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
           <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6">
             Booking Trends
@@ -434,7 +457,7 @@ export default function DashboardOverview() {
           </div>
         </div>
 
-        {/* Recent Bookings Table - Responsive */}
+
         <div className="bg-white rounded-xl shadow-md overflow-x-auto">
           <div className="p-4 sm:p-6">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">
@@ -443,7 +466,7 @@ export default function DashboardOverview() {
             <table className="min-w-full text-xs sm:text-sm">
               <thead className="bg-gray-50">
                 <tr>
-                  {['Member', 'Gym', 'Plan', 'Start Date', 'Status'].map((header, index) => (
+                  {["Member", "Gym", "Plan", "Start Date", "Status"].map((header, index) => (
                     <th 
                       key={index} 
                       className="px-3 sm:px-6 py-2 sm:py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -457,7 +480,13 @@ export default function DashboardOverview() {
                 {bookings.slice(0, 5).map((booking) => {
                   const gym = gyms.find(g => g.id === booking.gymId);
                   const plan = gym?.plans.find(p => p.id === booking.planId);
-                  
+
+                  const startDate = parseCustomDate(booking.startDate)?.toLocaleDateString('en-US', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                  }) || 'Invalid Date';
+
                   return (
                     <tr key={booking.id}>
                       <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-[10px] sm:text-sm font-medium text-gray-900">
@@ -470,18 +499,18 @@ export default function DashboardOverview() {
                         {plan?.name}
                       </td>
                       <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-[10px] sm:text-sm text-gray-500">
-                        {new Date(booking.startDate).toLocaleDateString()}
+                        {startDate}
                       </td>
-                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
+                      <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-[10px] sm:text-sm text-gray-500">
                         <span className={`inline-flex items-center px-2 py-1 rounded-full text-[8px] sm:text-xs font-medium ${
-                          booking.status === 'active'
-                            ? 'bg-green-100 text-green-800'
-                            : booking.status === 'completed'
-                            ? 'bg-blue-100 text-blue-800'
-                            : 'bg-red-100 text-red-800'
-                        }`}>
-                          {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
-                        </span>
+                            booking.status === 'active'
+                              ? 'bg-green-100 text-green-800'
+                              : booking.status === 'completed'
+                              ? 'bg-blue-100 text-blue-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}>
+                            {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                          </span>
                       </td>
                     </tr>
                   );
