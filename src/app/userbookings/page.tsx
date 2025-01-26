@@ -13,9 +13,9 @@ export default function UserBookingsPage() {
   const [loading, setLoading] = useState(true);
 
   // Utility to parse Firebase Timestamp or other date formats
-  const parseCustomDate = (date: any): Date | null => {
+  const parseCustomDate = (date: Date | { toDate: () => Date } | string | null): Date | null => {
     if (!date) return null;
-    if (date.toDate) return date.toDate(); // For Firebase Timestamp
+    if (typeof date === 'object' && 'toDate' in date) return date.toDate(); // For Firebase Timestamp
     const parsedDate = new Date(date);
     return isNaN(parsedDate.getTime()) ? null : parsedDate;
   };

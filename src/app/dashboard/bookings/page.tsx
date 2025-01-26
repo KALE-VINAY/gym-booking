@@ -13,13 +13,13 @@ export default function BookingsPage() {
   const [loading, setLoading] = useState(true);
 
   // Improved date parser
-  const parseCustomDate = (date: any): Date | null => {
+  const parseCustomDate = (date: string | { toDate: () => Date } | null): Date | null => {
     if (!date) return null;
-    if (typeof date.toDate === 'function') {
+    if (typeof date === 'object' && typeof date.toDate === 'function') {
       // For Firebase Timestamp
       return date.toDate();
     }
-    const parsedDate = new Date(date);
+    const parsedDate = new Date(date as string);
     return isNaN(parsedDate.getTime()) ? null : parsedDate;
   };
 
@@ -37,7 +37,7 @@ export default function BookingsPage() {
             const gymBookings = await bookingService.getGymBookings(gym.id);
             return gymBookings.map((booking: Booking) => ({
               ...booking,
-              startDate: parseCustomDate(booking.startDate),
+              startDate: parseCustomDate(booking.startDate as string | { toDate: () => Date } | null),
             }));
           })
         );

@@ -271,12 +271,12 @@ export default function DashboardOverview() {
     recentBookings: 0
   });
 
-  const parseCustomDate = (date: any): Date | null => {
+  const parseCustomDate = (date: string | Date | { toDate: () => Date }): Date | null => {
     if (!date) return null;
-    if (typeof date.toDate === 'function') {
-      return date.toDate();
+    if (typeof (date as { toDate: () => Date }).toDate === 'function') {
+      return (date as { toDate: () => Date }).toDate();
     }
-    const parsedDate = new Date(date);
+    const parsedDate = new Date(date as string | number | Date);
     return isNaN(parsedDate.getTime()) ? null : parsedDate;
   };
 
@@ -309,6 +309,7 @@ export default function DashboardOverview() {
           recentBookings: flattenedBookings.filter(
             b => {
               const bookingDate = parseCustomDate(b.startDate);
+              if (!bookingDate) return false;
               return bookingDate && bookingDate.getMonth() === new Date().getMonth();
             }
           ).length
