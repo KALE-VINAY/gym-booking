@@ -100,7 +100,6 @@
 //   );
 // }
 
-// src/app/gyms/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -136,89 +135,88 @@ export default function GymsPage() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <div className="mb-6 flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">Find Gyms</h1>
-              <div className="w-64">
-                <LocationFilter
-                  selectedLocation={selectedLocation}
-                  onChange={setSelectedLocation}
-                />
-              </div>
+      <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div className="mb-6 flex flex-col sm:flex-col justify-between items-center gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">Find Gyms</h1>
+            <div className="w-full sm:w-64">
+              <LocationFilter
+                selectedLocation={selectedLocation}
+                onChange={setSelectedLocation}
+              />
             </div>
-            {user && (
-              <Link 
-                href="/userbookings" 
-                className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 text-sm font-medium"
-              >
-                <TicketIcon className="h-5 w-5 mr-2" />
-                My Bookings
-              </Link>
-            )}
           </div>
-
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {gyms.map((gym) => (
-                <Link 
-                  key={gym.id}
-                  href={`/gyms/${gym.id}`}
-                  className="block hover:shadow-lg transition-shadow duration-200"
-                >
-                  <div className="bg-white rounded-lg shadow overflow-hidden">
-                    <div className="h-48 w-full relative">
-                      <Image
-                        src={gym.images[0]}
-                        alt={gym.name}
-                        layout="fill"
-                        objectFit="cover"
-                      />
-                    </div>
-                    <div className="p-4">
-                      <h3 className="text-lg font-semibold text-gray-900">{gym.name}</h3>
-                      <div className="mt-2 flex items-center text-sm text-gray-500">
-                        <MapPinIcon className="h-4 w-4 mr-1" />
-                        {gym.location}
-                      </div>
-                      <div className="mt-2">
-                        <div className="flex flex-wrap gap-2">
-                          {gym.facilities.slice(0, 3).map((facility, index) => (
-                            <span
-                              key={index}
-                              className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-800"
-                            >
-                              {facility.name}
-                            </span>
-                          ))}
-                          {gym.facilities.length > 3 && (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
-                              +{gym.facilities.length - 3} more
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="mt-4 flex justify-between items-center">
-                        <div className="flex items-center text-sm text-gray-500">
-                          <CalendarIcon className="h-4 w-4 mr-1" />
-                          Plans from ₹{Math.min(...gym.plans.map(p => p.price))}
-                        </div>
-                        <button className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 text-sm font-medium">
-                          View Details
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+          {user && (
+            <Link 
+              href="/userbookings" 
+              className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 text-sm font-medium"
+            >
+              <TicketIcon className="h-5 w-5 mr-2" />
+              My Bookings
+            </Link>
           )}
         </div>
+
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {gyms.map((gym) => (
+              <Link 
+                key={gym.id}
+                href={`/gyms/${gym.id}`}
+                className="block hover:shadow-lg transition-shadow duration-200"
+              >
+                <div className="bg-white rounded-lg shadow overflow-hidden">
+                  <div className="h-48 w-full relative">
+                    <Image
+                      src={gym.images[0]}
+                      alt={gym.name}
+                      layout="fill"
+                      objectFit="cover"
+                      className="hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold text-gray-900 truncate">{gym.name}</h3>
+                    <div className="mt-2 flex items-center text-sm text-gray-500">
+                      <MapPinIcon className="h-4 w-4 mr-1" />
+                      {gym.location}
+                    </div>
+                    <div className="mt-2">
+                      <div className="flex flex-wrap gap-2">
+                        {gym.facilities.slice(0, 3).map((facility, index) => (
+                          <span
+                            key={index}
+                            className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-800"
+                          >
+                            {facility.name}
+                          </span>
+                        ))}
+                        {gym.facilities.length > 3 && (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                            +{gym.facilities.length - 3} more
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="mt-4 flex justify-between items-center">
+                      <div className="flex items-center text-sm text-gray-500">
+                        <CalendarIcon className="h-4 w-4 mr-1" />
+                        Plans from ₹{Math.min(...gym.plans.map(p => p.price))}
+                      </div>
+                      <button className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 text-sm font-medium">
+                        View Details
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

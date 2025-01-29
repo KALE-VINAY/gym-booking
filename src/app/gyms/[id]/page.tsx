@@ -306,7 +306,7 @@ export default function GymDetailsPage() {
       return;
     }
 
-    const otp = generateOTP();
+    // const otp = generateOTP();
 
     try {
       // Implement booking logic here
