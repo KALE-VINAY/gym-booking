@@ -157,14 +157,14 @@ export default function DashboardLayout({
         <div
           className={`
             fixed inset-0 z-40 
-            lg:static lg:block lg:w-64 
+            lg:static lg:block lg:w-64 w-2/3
             transform transition-transform duration-300 ease-in-out
             ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
             lg:translate-x-0
             bg-white shadow-lg
           `}
         >
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col w-full h-full ">
             {/* Mobile close button */}
             <div className="lg:hidden flex items-center justify-between h-16 px-4 sm:px-6">
               <span className="text-base sm:text-xl text-gray-700 font-bold">GymBook Dashboard</span>
@@ -232,7 +232,7 @@ export default function DashboardLayout({
         {/* Overlay for mobile menu */}
         {sidebarOpen && (
           <div 
-            className="lg:hidden fixed inset-0 bg-black/50 z-30"
+            className="lg:hidden  fixed inset-0 bg-black/50 z-30"
             onClick={() => setSidebarOpen(false)}
           />
         )}

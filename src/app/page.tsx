@@ -136,7 +136,7 @@ export default function GymsPage() {
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <div className="mb-6 flex flex-col sm:flex-col justify-between items-center gap-4">
+        <div className="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-4">Find Gyms</h1>
             <div className="w-full sm:w-64">
