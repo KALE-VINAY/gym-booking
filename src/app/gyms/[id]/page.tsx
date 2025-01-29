@@ -318,7 +318,7 @@ export default function GymDetailsPage() {
         { name: user.displayName || '', email: user.email || '' }
       ); // Save booking to Firebase
       toast.success('Booking successful!');
-      toast.success(`Your OTP: ${otp}`);
+      // toast.success(`Your OTP: ${otp}`);
     } catch (error) {
       console.error('Error creating booking:', error);
       toast.error('Failed to create booking');
