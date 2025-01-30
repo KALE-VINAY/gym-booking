@@ -13,6 +13,16 @@ const nextConfig: NextConfig = {
         hostname: "plus.unsplash.com",
         pathname: "/**", // Allow all paths from this hostname
       },
+      {
+        protocol: "https",
+        hostname: "up.yimg.com",
+        pathname: "/**", // Allow all paths from this hostname
+      },
+      {
+        protocol: "https",
+        hostname: "images.creativemarket.com",
+        pathname: "/**", // Allow all paths from this hostname
+      },
     ],
   },
 };
