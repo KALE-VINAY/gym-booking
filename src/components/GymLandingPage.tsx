@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { MapPinIcon, CalendarIcon, TicketIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import Navbar from './Navbar';
 
 export default function GymLandingPage() {
   const [gyms, setGyms] = useState<Gym[]>([]);
@@ -35,6 +36,10 @@ export default function GymLandingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+
+        {/* Add Navbar at the top */}
+      <Navbar />
+
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gray-900 h-screen">
         <div className="absolute inset-0">
