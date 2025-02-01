@@ -87,9 +87,9 @@ export default function UserBookingsPage() {
   }
 
   return (
-    <div className="container mx-auto p-6">
+    <div className=" bg-white mx-auto p-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-        <h1 className="text-2xl text-white font-bold mb-4 sm:mb-0">My Bookings</h1>
+        <h1 className="text-2xl text-black font-bold mb-4 sm:mb-0">My Bookings</h1>
         <div className="flex space-x-2 overflow-x-auto pb-2 sm:pb-0">
           {[
             { id: 'all', label: 'All', color: 'gray' },

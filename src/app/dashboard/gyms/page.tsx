@@ -51,7 +51,7 @@ export default function MyGymsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {gyms.map(gym => (
-          <div key={gym.id} className="bg-white shadow-md rounded-lg overflow-hidden">
+          <div key={gym.id} className="bg-white p-5 shadow-md rounded-lg overflow-hidden">
             <Image 
               src={gym.images[0]} 
               alt={gym.name} 

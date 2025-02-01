@@ -115,7 +115,7 @@ const Login = () => {
     setLoading(true);
     try {
       await googleSignIn();
-      router.push("/dashboard");
+      router.push("/");
     } catch (error: unknown) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
@@ -144,7 +144,7 @@ const Login = () => {
       } else {
         await signIn(formData.email, formData.password);
       }
-      router.push("/dashboard");
+      router.push("/");
     } catch (error: unknown) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
