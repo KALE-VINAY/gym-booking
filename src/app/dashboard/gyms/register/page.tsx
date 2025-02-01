@@ -586,7 +586,7 @@ export default function RegisterGymPage() {
                 value={formData.googleMapsLink}
                 onChange={(e) => setFormData({ ...formData, googleMapsLink: e.target.value })}
                 placeholder="Paste Google Maps link here"
-                className="w-full p-2 border rounded-md text-sm sm:text-base"
+                className="w-full p-2 border text-gray-700 rounded-md text-sm sm:text-base"
               />
               <p className="text-xs text-blue-500 mt-1">
                  Provide a direct Google Maps link to your gym location
@@ -616,7 +616,7 @@ export default function RegisterGymPage() {
 
         {/* Equipment */}
         <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
-          <h2 className="text-xl   text-gray-800 font-semibold mb-4">Equipment</h2>
+          <h2 className=" text-sm  md:text-xl   text-gray-800 font-semibold mb-4"> Rules , Equipment, Operational Hours  (ex: 3hrs/session)</h2>
           
           <div className="space-y-2">
             {formData.equipment.map((item, index) => (
@@ -626,7 +626,7 @@ export default function RegisterGymPage() {
                   value={item}
                   onChange={(e) => handleEquipmentChange(index, e.target.value)}
                   placeholder="Equipment name"
-                  className="flex-1 p-2 border rounded-md text-sm sm:text-base"
+                  className="flex-1 p-2 border text-black rounded-md text-sm sm:text-base"
                 />
                 {index === formData.equipment.length - 1 && (
                   <button
@@ -660,8 +660,11 @@ export default function RegisterGymPage() {
 
         {/* Schedule */}
         <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold  text-gray-800  mb-4">Operating Hours</h2>
-          
+          <div className='grid grid-cols-3 gap-2 sm:gap-4 mb-4 items-center'>
+          <h2 className="  text-sm  md:text-xl font-semibold  text-gray-800  mb-4">Operating Hours</h2>
+          <h2 className='  text-sm  md:text-xl font-semibold  text-gray-800  mb-4'>Morning start time </h2>
+          <h2 className='  text-sm  md:text-xl font-semibold  text-gray-800  mb-4'>Evening start time </h2>
+          </div>
           {Object.entries(formData.schedule).map(([day, schedule]) => (
             <div key={day} className="grid grid-cols-3 gap-2 sm:gap-4 mb-4 items-center">
               <div className="flex items-center">

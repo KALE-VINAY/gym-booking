@@ -438,7 +438,7 @@ export default function GymDetailsPage() {
 
               <Tab.Group>
                 <Tab.List className="flex space-x-1 rounded-xl bg-indigo-900/20 p-1">
-                  {['Facilities', 'Schedule', 'Equipment'].map((tabName) => (
+                  {['Facilities', 'Schedule', 'Additional Info'].map((tabName) => (
                     <Tab
                       key={tabName}
                       className={({ selected }) =>
@@ -464,12 +464,18 @@ export default function GymDetailsPage() {
                   </Tab.Panel>
                   <Tab.Panel>
                     <div className="space-y-2 md:space-y-4">
+                    <div className='flex justify-between   sm:gap-4 mb-4 items-center'>
+                      <h2 className="  text-sm  md:text-xl font-semibold  text-gray-800  mb-4">Day</h2>
+                      <h2 className='  text-sm  md:text-xl font-semibold  text-gray-800  mb-4'>Morning & Evening start time  </h2>
+                      {/* <h2 className='  text-sm  md:text-xl font-semibold  text-gray-800  mb-4'></h2> */}
+                      </div>
                       {Object.entries(gym.schedule).map(([day, schedule]) => (
+                        
                         <div key={day} className="flex justify-between  text-gray-600 items-center">
                           <span className="capitalize">{day}</span>
                           <span>
                             {schedule.isOpen 
-                              ? `${schedule.openTime} - ${schedule.closeTime}`
+                              ? ` ${schedule.openTime}  --  ${schedule.closeTime}`
                               : 'Closed'}
                           </span>
                         </div>
@@ -522,7 +528,7 @@ export default function GymDetailsPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Start Date
                   </label>
-                  <DatePicker
+                  <DatePicker    
                     selected={startDate}
                     onChange={(date) => setStartDate(date)}
                     minDate={new Date()}
