@@ -40,7 +40,7 @@ export default function UserBookingsPage() {
                 gymLocation: gym?.location || 'Unknown Location',
                 planName: plan?.name || 'Unknown Plan',
               };
-            } catch (error) {
+            } catch {
               return {
                 ...booking,
                 gymName: 'Error Loading Gym',
