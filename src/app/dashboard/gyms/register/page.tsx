@@ -382,13 +382,16 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState ,useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { gymService } from '@/services/gymService';
 import { Facility, Location, WeeklySchedule } from '@/types';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/config/firebase'; // Make sure this import path is correct
+
 const storage = getStorage();
 
 // const initialSchedule: WeeklySchedule = {
@@ -466,7 +469,7 @@ export default function RegisterGymPage() {
   const { user } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-
+  const [isGymOwner, setIsGymOwner] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     location: '' as Location,
@@ -482,6 +485,30 @@ export default function RegisterGymPage() {
       { id: '4', name: 'Annual', duration: 'year' as const, price: 0 },
     ],
   });
+
+  useEffect(() => {
+    const checkGymOwnerStatus = async () => {
+      if (!user) return;
+
+      try {
+        const gymOwnersRef = doc(db, 'gymOwners', 'list');
+        const docSnap = await getDoc(gymOwnersRef);
+
+        if (docSnap.exists()) {
+          const gymOwners = docSnap.data().uids || [];
+          setIsGymOwner(gymOwners.includes(user.uid));
+        } else {
+          setIsGymOwner(false);
+        }
+      } catch (error) {
+        console.error('Error checking gym owner status:', error);
+        setIsGymOwner(false);
+      }
+    };
+
+    checkGymOwnerStatus();
+  }, [user]);
+
 
   const handleFacilityToggle = (facilityName: string) => {
     const facilities = [...formData.facilities];
@@ -545,12 +572,11 @@ export default function RegisterGymPage() {
       }
     });
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!user) {
-      toast.error('You must be logged in to register a gym');
+    if (!user || !isGymOwner) {
+      toast.error('You are not authorized to register a gym');
       return;
     }
 
@@ -562,7 +588,6 @@ export default function RegisterGymPage() {
     try {
       setLoading(true);
 
-      // Upload images to Firebase Storage
       const imageUploadPromises = formData.images.map(async (image) => {
         const storageRef = ref(storage, `gyms/${user.uid}/${Date.now()}_${image.name}`);
         const uploadResult = await uploadBytes(storageRef, image);
@@ -587,6 +612,21 @@ export default function RegisterGymPage() {
       setLoading(false);
     }
   };
+
+    // Render form only if user is a gym owner
+    if (!isGymOwner) {
+      return (
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-800 text-center">
+            Unauthorized Access
+          </h1>
+          <p className="text-center text-gray-600">
+            You are not authorized to register a gym. Please contact the administrator if you believe this is an error.
+          </p>
+        </div>
+      );
+    }
+
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -669,7 +709,7 @@ export default function RegisterGymPage() {
 
         {/* Equipment */}
         <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
-          <h2 className=" text-sm  md:text-xl   text-gray-800 font-semibold mb-4"> Rules , Equipment, Operational Hours  (ex: 3hrs/session)</h2>
+          <h2 className=" text-sm  md:text-xl   text-gray-800 font-semibold mb-4">Equipment</h2>
           
           <div className="space-y-2">
             {formData.equipment.map((item, index) => (
@@ -823,13 +863,15 @@ export default function RegisterGymPage() {
           </div>
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-indigo-400 text-sm sm:text-base"
-        >
-          {loading ? 'Registering...' : 'Register Gym'}
-        </button>
+        {isGymOwner && (
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-indigo-400 text-sm sm:text-base"
+          >
+            {loading ? 'Registering...' : 'Register Gym'}
+          </button>
+        )}
       </form>
     </div>
   );
