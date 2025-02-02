@@ -391,15 +391,55 @@ import toast from 'react-hot-toast';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 const storage = getStorage();
 
+// const initialSchedule: WeeklySchedule = {
+//   monday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
+//   tuesday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
+//   wednesday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
+//   thursday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
+//   friday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
+//   saturday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
+//   sunday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
+// };
+
+// RegisterGymPage.tsx - At the top of the file
 const initialSchedule: WeeklySchedule = {
-  monday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
-  tuesday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
-  wednesday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
-  thursday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
-  friday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
-  saturday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
-  sunday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
+  monday: {
+    isOpen: true,
+    morningSession: { openTime: '06:00', closeTime: '10:00' },
+    eveningSession: { openTime: '16:00', closeTime: '21:00' }
+  },
+  tuesday: {
+    isOpen: true,
+    morningSession: { openTime: '06:00', closeTime: '10:00' },
+    eveningSession: { openTime: '16:00', closeTime: '21:00' }
+  },
+  wednesday: {
+    isOpen: true,
+    morningSession: { openTime: '06:00', closeTime: '10:00' },
+    eveningSession: { openTime: '16:00', closeTime: '21:00' }
+  },
+  thursday: {
+    isOpen: true,
+    morningSession: { openTime: '06:00', closeTime: '10:00' },
+    eveningSession: { openTime: '16:00', closeTime: '21:00' }
+  },
+  friday: {
+    isOpen: true,
+    morningSession: { openTime: '06:00', closeTime: '10:00' },
+    eveningSession: { openTime: '16:00', closeTime: '21:00' }
+  },
+  saturday: {
+    isOpen: true,
+    morningSession: { openTime: '06:00', closeTime: '10:00' },
+    eveningSession: { openTime: '16:00', closeTime: '21:00' }
+  },
+  sunday: {
+    isOpen: true,
+    morningSession: { openTime: '06:00', closeTime: '10:00' },
+    eveningSession: { openTime: '16:00', closeTime: '21:00' }
+  }
 };
+
 
 const facilityOptions: string[] = [
   'Lockers',
@@ -476,8 +516,13 @@ export default function RegisterGymPage() {
     }
   };
 
-  const handleScheduleChange = (
+
+   // In RegisterGymPage.tsx, update the schedule section:
+
+
+   const handleScheduleChange = (
     day: keyof WeeklySchedule,
+    session: 'morningSession' | 'eveningSession',
     field: 'openTime' | 'closeTime' | 'isOpen',
     value: string | boolean
   ) => {
@@ -487,7 +532,15 @@ export default function RegisterGymPage() {
         ...formData.schedule,
         [day]: {
           ...formData.schedule[day],
-          [field]: value
+          ...(field === 'isOpen'
+            ? { isOpen: value as boolean }
+            : {
+                [session]: {
+                  ...formData.schedule[day][session],
+                  [field]: value
+                }
+              }
+          )
         }
       }
     });
@@ -660,53 +713,87 @@ export default function RegisterGymPage() {
 
         {/* Schedule */}
         <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
-          <div className='grid grid-cols-3 gap-2 sm:gap-4 mb-4 items-center'>
-          <h2 className="  text-sm  md:text-xl font-semibold  text-gray-800  mb-4">Operating Hours</h2>
-          <h2 className='  text-sm  md:text-xl font-semibold  text-gray-800  mb-4'>Morning start time </h2>
-          <h2 className='  text-sm  md:text-xl font-semibold  text-gray-800  mb-4'>Evening start time </h2>
-          </div>
-          {Object.entries(formData.schedule).map(([day, schedule]) => (
-            <div key={day} className="grid grid-cols-3 gap-2 sm:gap-4 mb-4 items-center">
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={schedule.isOpen}
-                  onChange={(e) => handleScheduleChange(
-                    day as keyof WeeklySchedule,
-                    'isOpen',
-                    e.target.checked
-                  )}
-                  className="mr-2"
-                />
-                <span className="capitalize text-sm text-gray-800 sm:text-base">{day}</span>
-              </div>
-              
-              <input
-                type="time"
-                value={schedule.openTime}
-                onChange={(e) => handleScheduleChange(
-                  day as keyof WeeklySchedule,
-                  'openTime',
-                  e.target.value
-                )}
-                disabled={!schedule.isOpen}
-                className="p-2 border text-gray-800 rounded-md text-sm sm:text-base"
-              />
-              
-              <input
-                type="time"
-                value={schedule.closeTime}
-                onChange={(e) => handleScheduleChange(
-                  day as keyof WeeklySchedule,
-                  'closeTime',
-                  e.target.value
-                )}
-                disabled={!schedule.isOpen}
-                className="p-2 border text-gray-800 rounded-md text-sm sm:text-base"
-              />
+            <h2 className="text-xl font-semibold text-gray-800 mb-6">Operating Hours</h2>
+            
+            <div className="grid grid-cols-5 gap-4 mb-4 items-center">
+              <div className="font-medium text-gray-700">Day</div>
+              <div className="col-span-2 text-center font-medium text-gray-700">Morning Session</div>
+              <div className="col-span-2 text-center font-medium text-gray-700">Evening Session</div>
             </div>
-          ))}
-        </div>
+
+            {Object.entries(formData.schedule).map(([day, schedule]) => (
+              <div key={day} className="grid grid-cols-5 gap-4 mb-4 items-center">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={schedule.isOpen}
+                    onChange={(e) => handleScheduleChange(
+                      day as keyof WeeklySchedule,
+                      'morningSession',
+                      'isOpen',
+                      e.target.checked
+                    )}
+                    className="mr-2"
+                  />
+                  <span className="capitalize text-sm text-gray-800">{day}</span>
+                </div>
+                
+                <div className="col-span-2 grid grid-cols-2 gap-2">
+                  <input
+                    type="time"
+                    value={schedule.morningSession.openTime}
+                    onChange={(e) => handleScheduleChange(
+                      day as keyof WeeklySchedule,
+                      'morningSession',
+                      'openTime',
+                      e.target.value
+                    )}
+                    disabled={!schedule.isOpen}
+                    className="p-2 border text-gray-800 rounded-md text-sm"
+                  />
+                  <input
+                    type="time"
+                    value={schedule.morningSession.closeTime}
+                    onChange={(e) => handleScheduleChange(
+                      day as keyof WeeklySchedule,
+                      'morningSession',
+                      'closeTime',
+                      e.target.value
+                    )}
+                    disabled={!schedule.isOpen}
+                    className="p-2 border text-gray-800 rounded-md text-sm"
+                  />
+                </div>
+
+                <div className="col-span-2 grid grid-cols-2 gap-2">
+                  <input
+                    type="time"
+                    value={schedule.eveningSession.openTime}
+                    onChange={(e) => handleScheduleChange(
+                      day as keyof WeeklySchedule,
+                      'eveningSession',
+                      'openTime',
+                      e.target.value
+                    )}
+                    disabled={!schedule.isOpen}
+                    className="p-2 border text-gray-800 rounded-md text-sm"
+                  />
+                  <input
+                    type="time"
+                    value={schedule.eveningSession.closeTime}
+                    onChange={(e) => handleScheduleChange(
+                      day as keyof WeeklySchedule,
+                      'eveningSession',
+                      'closeTime',
+                      e.target.value
+                    )}
+                    disabled={!schedule.isOpen}
+                    className="p-2 border text-gray-800 rounded-md text-sm"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
 
         {/* Plans */}
         <div className="bg-white p-4 sm:p-6 rounded-lg shadow">

@@ -37,9 +37,14 @@ export interface Gym {
     sunday: DaySchedule;
   }
   
-  export interface DaySchedule {
+  export interface SessionTime {
     openTime: string;
     closeTime: string;
+  }
+
+  export interface DaySchedule {
+    morningSession: SessionTime;
+  eveningSession: SessionTime;
     isOpen: boolean;
   }
   
@@ -66,3 +71,41 @@ export interface Gym {
     };
   }
 
+
+  export const initialSchedule: WeeklySchedule = {
+    monday: { 
+      isOpen: true,
+      morningSession: { openTime: '06:00', closeTime: '10:00' },
+      eveningSession: { openTime: '16:00', closeTime: '21:00' }
+    },
+    tuesday: { 
+      isOpen: true,
+      morningSession: { openTime: '06:00', closeTime: '10:00' },
+      eveningSession: { openTime: '16:00', closeTime: '21:00' }
+    },
+    wednesday: { 
+      isOpen: true,
+      morningSession: { openTime: '06:00', closeTime: '10:00' },
+      eveningSession: { openTime: '16:00', closeTime: '21:00' }
+    },
+    thursday: { 
+      isOpen: true,
+      morningSession: { openTime: '06:00', closeTime: '10:00' },
+      eveningSession: { openTime: '16:00', closeTime: '21:00' }
+    },
+    friday: { 
+      isOpen: true,
+      morningSession: { openTime: '06:00', closeTime: '10:00' },
+      eveningSession: { openTime: '16:00', closeTime: '21:00' }
+    },
+    saturday: { 
+      isOpen: true,
+      morningSession: { openTime: '06:00', closeTime: '10:00' },
+      eveningSession: { openTime: '16:00', closeTime: '21:00' }
+    },
+    sunday: { 
+      isOpen: true,
+      morningSession: { openTime: '06:00', closeTime: '10:00' },
+      eveningSession: { openTime: '16:00', closeTime: '21:00' }
+    }
+  };

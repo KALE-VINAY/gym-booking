@@ -290,9 +290,6 @@ export default function GymDetailsPage() {
     }
   }, [id]);
 
-  // const generateOTP = () => {
-  //   return Math.floor(100000 + Math.random() * 900000).toString(); // Generate 6-digit OTP
-  // };
 
 
   const handleBooking = async () => {
@@ -462,20 +459,26 @@ export default function GymDetailsPage() {
                       </div>
                     ))}
                   </Tab.Panel>
+                   {/* Update the schedule display in GymDetailsPage.tsx */}
                   <Tab.Panel>
-                    <div className="space-y-2 md:space-y-4">
-                    <div className='flex justify-between   sm:gap-4 mb-4 items-center'>
-                      <h2 className="  text-sm  md:text-xl font-semibold  text-gray-800  mb-4">Day</h2>
-                      <h2 className='  text-sm  md:text-xl font-semibold  text-gray-800  mb-4'>Morning & Evening start time  </h2>
-                      {/* <h2 className='  text-sm  md:text-xl font-semibold  text-gray-800  mb-4'></h2> */}
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-3 gap-4 mb-4">
+                        <h2 className="text-sm md:text-base font-semibold text-gray-800">Day</h2>
+                        <h2 className="text-sm md:text-base font-semibold text-gray-800">Morning Session</h2>
+                        <h2 className="text-sm md:text-base font-semibold text-gray-800">Evening Session</h2>
                       </div>
-                      {Object.entries(gym.schedule).map(([day, schedule]) => (
-                        
-                        <div key={day} className="flex justify-between  text-gray-600 items-center">
+                      
+                      {Object.entries(gym.schedule || {}).map(([day, schedule]) => (
+                        <div key={day} className="grid grid-cols-3 gap-4 text-gray-600">
                           <span className="capitalize">{day}</span>
                           <span>
-                            {schedule.isOpen 
-                              ? ` ${schedule.openTime}  --  ${schedule.closeTime}`
+                            {schedule?.isOpen && schedule?.morningSession
+                              ? `${schedule.morningSession.openTime} - ${schedule.morningSession.closeTime}`
+                              : 'Closed'}
+                          </span>
+                          <span>
+                            {schedule?.isOpen && schedule?.eveningSession
+                              ? `${schedule.eveningSession.openTime} - ${schedule.eveningSession.closeTime}`
                               : 'Closed'}
                           </span>
                         </div>
