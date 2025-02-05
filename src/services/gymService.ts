@@ -129,7 +129,7 @@ import {
   deleteDoc
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { Gym, Location, GymPlan } from '@/types';
+import { Gym, Location } from '@/types';
 
 export const gymService = {
   async getGyms(location: Location): Promise<Gym[]> {
@@ -160,7 +160,7 @@ export const gymService = {
       
       const gymData = gymDoc.data();
       // Ensure plans are properly formatted
-      const formattedPlans = (gymData.plans || []).map((plan: any) => ({
+      const formattedPlans = (gymData.plans || []).map((plan: { id: string; name: string; duration: string; price: number }) => ({
         id: plan.id,
         name: plan.name,
         duration: plan.duration,
@@ -189,7 +189,7 @@ export const gymService = {
       querySnapshot.forEach((doc) => {
         const gymData = doc.data();
         // Ensure plans are properly formatted
-        const formattedPlans = (gymData.plans || []).map((plan: any) => ({
+        const formattedPlans = (gymData.plans || []).map((plan: { id: string; name: string; duration: string; price: number }) => ({
           id: plan.id,
           name: plan.name,
           duration: plan.duration,
