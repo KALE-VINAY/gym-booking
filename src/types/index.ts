@@ -1,17 +1,32 @@
 // src/types/index.ts
 
+// export interface Gym {
+//     id: string;
+//     name: string;
+//     location: Location;
+//     googleMapsLink?: string;
+//     facilities: Facility[];
+//     equipment: string[];
+//     images: string[];
+//     schedule: WeeklySchedule;
+//     plans: GymPlan[];
+//     ownerId: string;
+//   }
+
 export interface Gym {
-    id: string;
-    name: string;
-    location: Location;
-    googleMapsLink?: string;
-    facilities: Facility[];
-    equipment: string[];
-    images: string[];
-    schedule: WeeklySchedule;
-    plans: GymPlan[];
-    ownerId: string;
-  }
+  id: string;
+  name: string;
+  location: Location;
+  facilities: Facility[];
+  equipment: string[];
+  images: string[];
+  schedule: WeeklySchedule;
+  googleMapsLink: string;
+  plans: GymPlan[];
+  ownerId: string;
+  createdAt: string;
+  updatedAt?: string;
+}
   
   export type Location = 
     | 'Guwahati'
@@ -48,10 +63,17 @@ export interface Gym {
     isOpen: boolean;
   }
   
+  // export interface GymPlan {
+  //   id: string;
+  //   name: string;
+  //   duration: 'day'|'1Week' | '3months' | '6months' | 'year';
+  //   price: number;
+  // }
+
   export interface GymPlan {
     id: string;
     name: string;
-    duration: 'day'|'1Week' | '3months' | '6months' | 'year';
+    duration: string;
     price: number;
   }
   

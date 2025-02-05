@@ -391,18 +391,11 @@ import toast from 'react-hot-toast';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/config/firebase'; // Make sure this import path is correct
+import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 const storage = getStorage();
 
-// const initialSchedule: WeeklySchedule = {
-//   monday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
-//   tuesday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
-//   wednesday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
-//   thursday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
-//   friday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
-//   saturday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
-//   sunday: { openTime: '06:00', closeTime: '22:00', isOpen: true },
-// };
+
 
 // RegisterGymPage.tsx - At the top of the file
 const initialSchedule: WeeklySchedule = {
@@ -479,10 +472,12 @@ export default function RegisterGymPage() {
     schedule: initialSchedule,
     googleMapsLink: '',
     plans: [
-      { id: '1', name: 'Daily Pass', duration: 'day' as const, price: 0 },
-      { id: '2', name: '3 Months', duration: '3months' as const, price: 0 },
-      { id: '3', name: '6 Months', duration: '6months' as const, price: 0 },
-      { id: '4', name: 'Annual', duration: 'year' as const, price: 0 },
+      {
+        id: '1',
+        name: '',
+        duration: '',
+        price: 0
+      }
     ],
   });
 
@@ -572,46 +567,94 @@ export default function RegisterGymPage() {
       }
     });
   };
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
 
-    if (!user || !isGymOwner) {
-      toast.error('You are not authorized to register a gym');
-      return;
-    }
-
-    if (formData.images.length < 3) {
-      toast.error('Please upload at least 3 images of your gym');
-      return;
-    }
-
-    try {
-      setLoading(true);
-
-      const imageUploadPromises = formData.images.map(async (image) => {
-        const storageRef = ref(storage, `gyms/${user.uid}/${Date.now()}_${image.name}`);
-        const uploadResult = await uploadBytes(storageRef, image);
-        return await getDownloadURL(uploadResult.ref);
-      });
-
-      const imageUrls = await Promise.all(imageUploadPromises);
-
-      const gymData = {
-        ...formData,
-        images: imageUrls,
-        ownerId: user.uid,
-      };
-
-      await gymService.createGym(gymData, formData.images);
-      toast.success('Gym registered successfully!');
-      router.push('/dashboard/gyms');
-    } catch (error) {
-      console.error('Error registering gym:', error);
-      toast.error('Failed to register gym');
-    } finally {
-      setLoading(false);
-    }
+  const handleAddPlan = () => {
+    setFormData({
+      ...formData,
+      plans: [
+        ...formData.plans,
+        {
+          id: (formData.plans.length + 1).toString(),
+          name: '',
+          duration: '',
+          price: 0
+        }
+      ]
+    });
   };
+
+  const handleRemovePlan = (planId: string) => {
+    setFormData({
+      ...formData,
+      plans: formData.plans.filter(plan => plan.id !== planId)
+    });
+  };
+
+  const handlePlanChange = (planId: string, field: 'name' | 'duration' | 'price', value: string | number) => {
+    setFormData({
+      ...formData,
+      plans: formData.plans.map(plan =>
+        plan.id === planId
+          ? { ...plan, [field]: value }
+          : plan
+      )
+    });
+  };
+
+
+// RegisterGymPage.tsx
+// Update the handleSubmit function in your RegisterGymPage component:
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (!user || !isGymOwner) {
+    toast.error('You are not authorized to register a gym');
+    return;
+  }
+
+  if (formData.images.length < 3) {
+    toast.error('Please upload at least 3 images of your gym');
+    return;
+  }
+
+  // Validate plans
+  if (formData.plans.some(plan => !plan.name || !plan.duration)) {
+    toast.error('Please fill in all plan details');
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    // Prepare the gym data
+    const gymData = {
+      name: formData.name,
+      location: formData.location,
+      facilities: formData.facilities,
+      equipment: formData.equipment.filter(item => item.trim() !== ''),
+      schedule: formData.schedule,
+      googleMapsLink: formData.googleMapsLink,
+      plans: formData.plans.map(plan => ({
+        id: plan.id,
+        name: plan.name.trim(),
+        duration: plan.duration.trim(),
+        price: Number(plan.price)
+      })),
+      ownerId: user.uid,
+    };
+
+    // Pass both gymData and images separately
+    await gymService.createGym(gymData, formData.images);
+    toast.success('Gym registered successfully!');
+    router.push('/dashboard/gyms');
+  } catch (error) {
+    console.error('Error registering gym:', error);
+    toast.error('Failed to register gym');
+  } finally {
+    setLoading(false);
+  }
+};
 
     // Render form only if user is a gym owner
     if (!isGymOwner) {
@@ -836,7 +879,7 @@ export default function RegisterGymPage() {
           </div>
 
         {/* Plans */}
-        <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
+        {/* <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
           <h2 className="text-xl font-semibold  text-gray-800  mb-4">Membership Plans</h2>
           
           <div className="space-y-4">
@@ -861,7 +904,70 @@ export default function RegisterGymPage() {
               </div>
             ))}
           </div>
+        </div> */}
+              {/* Updated Plans Section */}
+      <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">Membership Plans</h2>
+        
+        <div className="space-y-4">
+          {formData.plans.map((plan) => (
+            <div key={plan.id} className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 items-end">
+              <div className="w-full sm:w-2/5">
+                <label className="block text-sm text-gray-600 mb-1">Plan Name</label>
+                <input
+                  type="text"
+                  value={plan.name}
+                  onChange={(e) => handlePlanChange(plan.id, 'name', e.target.value)}
+                  placeholder="e.g., Monthly Pass"
+                  className="w-full p-2 border text-gray-800 rounded-md text-sm"
+                />
+              </div>
+              
+              <div className="w-full sm:w-2/5">
+                <label className="block text-sm text-gray-600 mb-1">Duration</label>
+                <input
+                  type="text"
+                  value={plan.duration}
+                  onChange={(e) => handlePlanChange(plan.id, 'duration', e.target.value)}
+                  placeholder="e.g., 1 month, 3 months"
+                  className="w-full p-2 border text-gray-800 rounded-md text-sm"
+                />
+              </div>
+
+              <div className="w-full sm:w-1/5">
+                <label className="block text-sm text-gray-600 mb-1">Price (₹)</label>
+                <input
+                  type="number"
+                  value={plan.price}
+                  onChange={(e) => handlePlanChange(plan.id, 'price', parseInt(e.target.value) || 0)}
+                  placeholder="Price"
+                  className="w-full p-2 border text-gray-800 rounded-md text-sm"
+                  min="0"
+                />
+              </div>
+
+              {formData.plans.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => handleRemovePlan(plan.id)}
+                  className="text-red-600 hover:text-red-700 p-2"
+                >
+                  <TrashIcon className="h-5 w-5" />
+                </button>
+              )}
+            </div>
+          ))}
+
+          <button
+            type="button"
+            onClick={handleAddPlan}
+            className="flex items-center text-indigo-600 hover:text-indigo-700"
+          >
+            <PlusIcon className="h-5 w-5 mr-1" />
+            Add Plan
+          </button>
         </div>
+      </div>
 
         {isGymOwner && (
           <button

@@ -115,7 +115,7 @@ export default function GymLandingPage() {
               viewport={{ once: true }}
               className="text-center"
             >
-              <div className="text-4xl font-bold text-indigo-600">300+</div>
+              <div className="text-4xl font-bold text-black">300+</div>
               <div className="mt-2 text-lg text-gray-600">Partner Gyms</div>
             </motion.div>
             <motion.div
@@ -125,7 +125,7 @@ export default function GymLandingPage() {
               transition={{ delay: 0.2 }}
               className="text-center"
             >
-              <div className="text-4xl font-bold text-indigo-600">10K+</div>
+              <div className="text-4xl font-bold text-black">10K+</div>
               <div className="mt-2 text-lg text-gray-600">Active Members</div>
             </motion.div>
             <motion.div
@@ -135,7 +135,7 @@ export default function GymLandingPage() {
               transition={{ delay: 0.4 }}
               className="text-center"
             >
-              <div className="text-4xl font-bold text-indigo-600">7</div>
+              <div className="text-4xl font-bold text-black">7</div>
               <div className="mt-2 text-lg text-gray-600">Major Cities</div>
             </motion.div>
           </div>
