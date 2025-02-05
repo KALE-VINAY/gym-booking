@@ -388,7 +388,7 @@ import { gymService } from '@/services/gymService';
 import { Facility, Location, WeeklySchedule } from '@/types';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { getStorage, } from 'firebase/storage';
+// import { getStorage, } from 'firebase/storage';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/config/firebase'; // Make sure this import path is correct
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
