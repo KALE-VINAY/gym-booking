@@ -639,7 +639,8 @@ const handleSubmit = async (e: React.FormEvent) => {
         id: plan.id,
         name: plan.name.trim(),
         duration: plan.duration.trim(),
-        price: Number(plan.price)
+        price: Number(plan.price),
+        isActive: true
       })),
       ownerId: user.uid,
     };
