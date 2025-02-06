@@ -189,12 +189,12 @@ const MyGymsPage = () => {
               >
                 <EyeIcon className="h-5 text-gray-800 w-5 mr-2" /> View
               </Link>
-              <Link 
+              {/* <Link 
                 href={`/dashboard/gyms/edit/${gym.id}`} 
                 className="btn btn-primary flex-1 text-gray-800 flex items-center justify-center"
               >
                 <PencilIcon className="h-5 text-gray-800 w-5 mr-2" /> Edit
-              </Link>
+              </Link> */}
               <button 
                 onClick={() => handleDeleteGym(gym.id)}
                 className="btn btn-danger flex-1 text-gray-800 flex items-center justify-center"
