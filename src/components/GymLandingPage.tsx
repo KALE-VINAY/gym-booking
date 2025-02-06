@@ -192,7 +192,7 @@ export default function GymLandingPage() {
                   <div className="bg-white rounded-lg shadow overflow-hidden">
                     <div className="h-48 w-full relative">
                       <Image
-                        src={gym.images[0]}
+                        src={typeof gym.images[0] === 'string' ? gym.images[0] : ''}
                         alt={gym.name}
                         layout="fill"
                         objectFit="cover"
