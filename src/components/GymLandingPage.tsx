@@ -7,7 +7,7 @@ import { gymService } from '@/services/gymService';
 import { useAuth } from '@/context/AuthContext';
 import LocationFilter from '@/components/LocationFilter';
 import Link from 'next/link';
-import { MapPinIcon, CalendarIcon, TicketIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { MapPinIcon, CalendarIcon, TicketIcon, ChevronRightIcon,MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import Navbar from './Navbar';
@@ -17,6 +17,7 @@ export default function GymLandingPage() {
   const [loading, setLoading] = useState(true);
   const [selectedLocation, setSelectedLocation] = useState<Location>('ALL');
   const { user } = useAuth();
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchGyms = async () => {
@@ -33,6 +34,10 @@ export default function GymLandingPage() {
 
     fetchGyms();
   }, [selectedLocation]);
+
+  const filteredGyms = gyms.filter(gym =>
+    gym.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
@@ -155,6 +160,19 @@ export default function GymLandingPage() {
                 
               />
             </div>
+            <div>
+                <h3 className='text-gray-400 mt-2 mb-1'>Search Gyms</h3>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search by gym name..."
+                    className="w-full px-4 py-2 text-black border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  />
+                  <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                </div>
+              </div>
           </div>
           {user && (
             <motion.div whileHover={{ scale: 1.05 }}>
@@ -180,7 +198,7 @@ export default function GymLandingPage() {
             transition={{ duration: 0.5 }}
             className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           >
-            {gyms.map((gym, index) => (
+            {filteredGyms.map((gym, index) => (
               <motion.div
                 key={gym.id}
                 initial={{ opacity: 0, y: 20 }}
