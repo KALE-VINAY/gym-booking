@@ -151,6 +151,7 @@ export default function GymLandingPage() {
               <LocationFilter
                 selectedLocation={selectedLocation}
                 onChange={setSelectedLocation}
+                
               />
             </div>
           </div>
