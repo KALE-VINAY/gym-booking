@@ -143,6 +143,7 @@
 //   );
 // }
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -150,6 +151,7 @@ import { useAuth } from '@/context/AuthContext';
 import { gymService } from '@/services/gymService';
 import { bookingService } from '@/services/bookingService';
 import { Gym, Booking } from '@/types';
+import { Search } from 'lucide-react';
 
 export default function BookingsPage() {
   const { user } = useAuth();
@@ -157,6 +159,7 @@ export default function BookingsPage() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState<'all' | 'upcoming' | 'active' | 'completed'>('all');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const parseCustomDate = (date: string | { toDate: () => Date } | null): Date | null => {
     if (!date) return null;
@@ -207,9 +210,32 @@ export default function BookingsPage() {
     return plan ? plan.name : 'Unknown Plan';
   };
 
-  const filteredBookings = activeFilter === 'all' 
-    ? bookings 
-    : bookings.filter(booking => booking.status === activeFilter);
+  const filteredBookings = bookings
+    .filter(booking => {
+      if (activeFilter !== 'all' && booking.status !== activeFilter) {
+        return false;
+      }
+      
+      if (!searchTerm) return true;
+      
+      const searchLower = searchTerm.toLowerCase();
+      const startDate = booking.startDate instanceof Date
+        ? booking.startDate.toLocaleDateString('en-US', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+          })
+        : '';
+
+      return (
+        booking.userDetails.name.toLowerCase().includes(searchLower) ||
+        getGymName(booking.gymId).toLowerCase().includes(searchLower) ||
+        getPlanName(booking.gymId, booking.planId).toLowerCase().includes(searchLower) ||
+        startDate.toLowerCase().includes(searchLower) ||
+        booking.otp.toString().toLowerCase().includes(searchLower) ||
+        booking.status.toLowerCase().includes(searchLower)
+      );
+    });
 
   if (loading) {
     return (
@@ -222,11 +248,28 @@ export default function BookingsPage() {
   return (
     <div className="bg-gray-50 p-4 sm:p-8">
       <div className="container mx-auto max-w-7xl">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-4 sm:mb-0">
+        {/* Header and Search Section */}
+        <div className="space-y-4 mb-6">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
             Bookings
           </h1>
-          <div className="flex space-x-2 overflow-x-auto pb-2 sm:pb-0">
+          
+          {/* Search Bar */}
+          <div className="relative w-full md:w-96">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              placeholder="Search by member, gym, plan, date..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm"
+            />
+          </div>
+
+          {/* Filter Buttons */}
+          <div className="flex flex-wrap gap-2">
             {[
               { id: 'all', label: 'All', color: 'gray' },
               { id: 'upcoming', label: 'Upcoming', color: 'red' },
@@ -239,10 +282,10 @@ export default function BookingsPage() {
                 className={`
                   px-4 py-2 rounded-full text-sm font-medium transition-colors 
                   ${activeFilter === id
-                    ? `bg-${color}-600 text-black`
+                    ? `bg-${color}-600 text-white`
                     : `bg-${color}-100 text-${color}-800 hover:bg-${color}-200`
                   }
-                  min-w-[100px]
+                  flex-shrink-0
                 `}
               >
                 {label}
@@ -251,66 +294,77 @@ export default function BookingsPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md overflow-x-auto">
-          <table className="min-w-full text-xs sm:text-sm">
-            <thead className="bg-gray-50">
-              <tr>
-                {['Member', 'Gym', 'Plan', 'Start Date', 'OTP', 'Status'].map((header, index) => (
-                  <th
-                    key={index}
-                    className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    {header}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {filteredBookings.map((booking) => {
-                const startDate =
-                  booking.startDate instanceof Date
-                    ? booking.startDate.toLocaleDateString('en-US', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric',
-                      })
-                    : 'Invalid Date';
-
-                return (
-                  <tr key={booking.id}>
-                    <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {booking.userDetails.name}
-                    </td>
-                    <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-500">
-                      {getGymName(booking.gymId)}
-                    </td>
-                    <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-500">
-                      {getPlanName(booking.gymId, booking.planId)}
-                    </td>
-                    <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-500">
-                      {startDate}
-                    </td>
-                    <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-sm text-gray-500">
-                      {booking.otp}
-                    </td>
-                    <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
-                      <span
-                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                          booking.status === 'active'
-                            ? 'bg-green-100 text-green-800'
-                            : booking.status === 'completed'
-                            ? 'bg-blue-100 text-blue-800'
-                            : 'bg-red-100 text-red-800'
-                        }`}
-                      >
-                        {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
-                      </span>
+        {/* Table Section */}
+        <div className="bg-white rounded-xl shadow-md overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  {['Member', 'Gym', 'Plan', 'Start Date', 'OTP', 'Status'].map((header, index) => (
+                    <th
+                      key={index}
+                      className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      {header}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredBookings.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
+                      No bookings found matching your criteria
                     </td>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                ) : (
+                  filteredBookings.map((booking) => {
+                    const startDate =
+                      booking.startDate instanceof Date
+                        ? booking.startDate.toLocaleDateString('en-US', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric',
+                          })
+                        : 'Invalid Date';
+
+                    return (
+                      <tr key={booking.id} className="hover:bg-gray-50">
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {booking.userDetails.name}
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {getGymName(booking.gymId)}
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {getPlanName(booking.gymId, booking.planId)}
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {startDate}
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {booking.otp}
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              booking.status === 'active'
+                                ? 'bg-green-100 text-green-800'
+                                : booking.status === 'completed'
+                                ? 'bg-blue-100 text-blue-800'
+                                : 'bg-red-100 text-red-800'
+                            }`}
+                          >
+                            {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

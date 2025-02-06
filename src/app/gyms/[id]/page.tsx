@@ -366,7 +366,7 @@ export default function GymDetailsPage() {
                 }`}
               >
                 <Image
-                  src={image}
+                  src={typeof image === 'string' ? image : URL.createObjectURL(image)}
                   alt={`${gym.name} ${index + 1}`}
                   layout="fill"
                   objectFit="cover"

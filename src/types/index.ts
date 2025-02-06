@@ -19,7 +19,7 @@ export interface Gym {
   location: Location;
   facilities: Facility[];
   equipment: string[];
-  images: string[];
+  images: (string | File)[];
   schedule: WeeklySchedule;
   googleMapsLink: string;
   plans: GymPlan[];
@@ -75,6 +75,7 @@ export interface Gym {
     name: string;
     duration: string;
     price: number;
+    isActive: boolean;
   }
   
   export interface Booking {

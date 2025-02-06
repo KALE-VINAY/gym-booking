@@ -174,7 +174,7 @@ const MyGymsPage = () => {
         {gyms.map(gym => (
           <div key={gym.id} className="bg-white p-5 shadow-md rounded-lg overflow-hidden">
             <Image 
-              src={gym.images[0]} 
+              src={typeof gym.images[0] === 'string' ? gym.images[0] : URL.createObjectURL(gym.images[0])} 
               alt={gym.name} 
               width={500}
               height={300}
