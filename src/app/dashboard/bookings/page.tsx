@@ -269,28 +269,30 @@ export default function BookingsPage() {
           </div>
 
           {/* Filter Buttons */}
-          <div className="flex flex-wrap gap-2">
-            {[
-              { id: 'all', label: 'All', color: 'gray' },
-              { id: 'upcoming', label: 'Upcoming', color: 'red' },
-              { id: 'active', label: 'Active', color: 'green' },
-              { id: 'completed', label: 'Completed', color: 'blue' }
-            ].map(({ id, label, color }) => (
-              <button
-                key={id}
-                onClick={() => setActiveFilter(id as typeof activeFilter)}
-                className={`
-                  px-4 py-2 rounded-full text-sm font-medium transition-colors 
-                  ${activeFilter === id
-                    ? `bg-${color}-600 text-white`
-                    : `bg-${color}-100 text-${color}-800 hover:bg-${color}-200`
-                  }
-                  flex-shrink-0
-                `}
-              >
-                {label}
-              </button>
-            ))}
+          <div className="overflow-x-auto">
+            <div className="flex gap-2 min-w-max pb-2">
+              {[
+                { id: 'all', label: 'All', color: 'gray' },
+                { id: 'upcoming', label: 'Upcoming', color: 'red' },
+                { id: 'active', label: 'Active', color: 'green' },
+                { id: 'completed', label: 'Completed', color: 'blue' }
+              ].map(({ id, label, color }) => (
+                <button
+                  key={id}
+                  onClick={() => setActiveFilter(id as typeof activeFilter)}
+                  className={`
+                    px-4 py-2 rounded-full text-sm font-medium transition-colors 
+                    ${activeFilter === id
+                      ? `bg-${color}-600 text-white`
+                      : `bg-${color}-100 text-${color}-800 hover:bg-${color}-200`
+                    }
+                    flex-shrink-0
+                  `}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
