@@ -1,13 +1,22 @@
-// src/components/Navbar.tsx
-
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
-// import { useState } from 'react';
 import { Menu } from '@headlessui/react';
-import { UserCircleIcon } from '@heroicons/react/24/outline';
+import { UserCircleIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+
+  const scrollToGyms = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const element = document.getElementById('browse-gyms');
+    if (element) {
+      const offset = element.offsetTop - 64; // 64px is navbar height
+      window.scrollTo({
+        top: offset,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   return (
     <nav className="bg-white z-50 shadow-lg fixed w-full">
@@ -20,9 +29,13 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center">
-            <Link href="/#browse-gyms" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
-              Find Gyms
-            </Link>
+            <button 
+              onClick={scrollToGyms}
+              className="flex flex-row items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900"
+            >
+              <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 mr-1" />
+              Gyms
+            </button>
             
             {!user ? (
               <div className="flex items-center space-x-4">
