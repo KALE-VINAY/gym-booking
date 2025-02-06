@@ -147,6 +147,7 @@ export default function GymLandingPage() {
         <div className="mb-12 flex flex-col sm:flex-row justify-between items-center gap-4">
           <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Discover Nearby Gyms</h2>
+            <h3 className='text-gray-400 mt-2 mb-1'>Select Location</h3>
             <div className="w-full sm:w-64">
               <LocationFilter
                 selectedLocation={selectedLocation}
