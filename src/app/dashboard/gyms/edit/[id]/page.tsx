@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { gymService } from '@/services/gymService';
 import { useRouter } from 'next/navigation';
@@ -8,7 +9,7 @@ import toast from 'react-hot-toast';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { Gym, Location, Facility, WeeklySchedule, GymPlan, initialSchedule } from '@/types';
+import { Gym, Location,  WeeklySchedule, GymPlan, initialSchedule } from '@/types';
 
 const facilityOptions: string[] = [
   'Lockers',
@@ -87,7 +88,7 @@ export default function EditGymPage({ params }: { params: { gymId: string } }) {
         }
 
         // Omit id and createdAt from the fetched data
-        const { id, createdAt, ...formDataWithoutId } = gymData;
+        const { createdAt, ...formDataWithoutId } = gymData;
         setFormData(formDataWithoutId);
       } catch (error) {
         console.error('Error initializing page:', error);
@@ -369,7 +370,7 @@ export default function EditGymPage({ params }: { params: { gymId: string } }) {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {formData.images.filter(img => typeof img === 'string').map((url, index) => (
                 <div key={index} className="relative">
-                  <img src={url as string} alt={`Gym image ${index + 1}`} className="w-full h-32 object-cover rounded" />
+                  <Image src={url as string} alt={`Gym image ${index + 1}`} width={128} height={128} className="w-full h-32 object-cover rounded" />
                 </div>
               ))}
             </div>
