@@ -95,7 +95,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { gymService } from '@/services/gymService';
 import { Gym } from '@/types';
-import { PlusIcon, EyeIcon,  TrashIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, EyeIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import Image from 'next/image';
 import { doc, getDoc } from 'firebase/firestore';
@@ -145,14 +145,14 @@ const MyGymsPage = () => {
     initPage();
   }, [user]);
 
-  const handleDeleteGym = async (gymId: string) => {
-    try {
-      await gymService.deleteGym(gymId);
-      setGyms(gyms.filter(gym => gym.id !== gymId));
-    } catch (error) {
-      console.error('Error deleting gym:', error);
-    }
-  };
+  // const handleDeleteGym = async (gymId: string) => {
+  //   try {
+  //     await gymService.deleteGym(gymId);
+  //     setGyms(gyms.filter(gym => gym.id !== gymId));
+  //   } catch (error) {
+  //     console.error('Error deleting gym:', error);
+  //   }
+  // };
 
   if (loading) return <div>Loading...</div>;
 
@@ -195,12 +195,12 @@ const MyGymsPage = () => {
               >
                 <PencilIcon className="h-5 text-gray-800 w-5 mr-2" /> Edit
               </Link> */}
-              <button 
+              {/* <button 
                 onClick={() => handleDeleteGym(gym.id)}
                 className="btn btn-danger flex-1 text-gray-800 flex items-center justify-center"
               >
                 <TrashIcon className="h-5 text-gray-800 w-5 mr-2" /> Delete
-              </button>
+              </button> */}
             </div>
           </div>
         ))}
