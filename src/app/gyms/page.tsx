@@ -169,7 +169,7 @@ export default function GymsPage() {
                 <div className="bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
                   <div className="h-40 sm:h-56 w-full overflow-hidden">
                     <Image
-                      src={gym.images[0]}
+                      src={typeof gym.images[0] === 'string' ? gym.images[0] : URL.createObjectURL(gym.images[0])}
                       alt={gym.name}
                       layout="fill"
                       objectFit="cover"
