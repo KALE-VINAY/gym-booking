@@ -95,7 +95,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { gymService } from '@/services/gymService';
 import { Gym } from '@/types';
-import { PlusIcon, EyeIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, EyeIcon,  TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import Image from 'next/image';
 import { doc, getDoc } from 'firebase/firestore';
