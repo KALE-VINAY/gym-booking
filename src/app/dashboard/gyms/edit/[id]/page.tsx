@@ -88,7 +88,7 @@ export default function EditGymPage({ params }: { params: { gymId: string } }) {
         }
 
         // Omit id and createdAt from the fetched data
-        const { createdAt, ...formDataWithoutId } = gymData;
+        const { ...formDataWithoutId } = gymData;
         setFormData(formDataWithoutId);
       } catch (error) {
         console.error('Error initializing page:', error);
