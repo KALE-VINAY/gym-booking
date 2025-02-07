@@ -37,6 +37,16 @@ export default function GymLandingPage() {
   const filteredGyms = gyms.filter(gym =>
     gym.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  
+  // Added the scroll handler function
+const scrollToGyms = (e: React.MouseEvent) => {
+  e.preventDefault();
+  const element = document.getElementById('browse-gyms');
+  if (element) {
+    const offset = element.offsetTop - 64; // 64px is navbar height
+    window.scrollTo({ top: offset, behavior: 'smooth' });
+  }
+};
 
   return (
     <div className="min-h-screen bg-white">
@@ -76,13 +86,13 @@ export default function GymLandingPage() {
               whileTap={{ scale: 0.95 }}
               className="mt-10"
             >
-              <Link
-                href="#browse-gyms"
+             <button
+                onClick={scrollToGyms}
                 className="inline-flex items-center px-8 py-4 border border-transparent text-lg font-medium rounded-md text-white bg-green-500 hover:bg-green-600 transition-all duration-200"
               >
                 I Want To Get Healthy!
                 <ChevronRightIcon className="ml-2 h-5 w-5" />
-              </Link>
+              </button>
             </motion.div>
           </motion.div>
         </div>
