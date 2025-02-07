@@ -38,31 +38,30 @@ export default function GymLandingPage() {
     gym.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
   
-  // Added the scroll handler function
-const scrollToGyms = (e: React.MouseEvent) => {
-  e.preventDefault();
-  const element = document.getElementById('browse-gyms');
-  if (element) {
-    const offset = element.offsetTop - 64; // 64px is navbar height
-    window.scrollTo({ top: offset, behavior: 'smooth' });
-  }
-};
+  const scrollToGyms = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const element = document.getElementById('browse-gyms');
+    if (element) {
+      const offset = element.offsetTop - 64; // 64px is navbar height
+      window.scrollTo({ top: offset, behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
 
-      {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gray-900 h-screen">
+        {/* Hero Section */}
+        <div className="relative overflow-hidden bg-white h-screen">
         <div className="absolute inset-0">
-          <Image
+          {/* <Image
             src="https://images.creativemarket.com/0.1.0/ps/5850983/1820/1213/m1/fpnw/wm1/iblcsxcrrsyk5q1od294ouwgrtupdxmi11fsjeoermvh8tn6vzfupmaz25w68mzr-.jpg?1549634378&s=ef5caa2ee9c3bd2ec510dadf76727247"
             alt="Gym background"
             layout="fill"
             objectFit="cover"
             className="opacity-40"
             priority
-          />
+          /> */}
         </div>
         <div className="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
           <motion.div
@@ -71,13 +70,13 @@ const scrollToGyms = (e: React.MouseEvent) => {
             transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <h1 className="text-4xl sm:text-6xl font-bold text-white mb-6">
+            <h1 className="text-4xl sm:text-6xl font-bold text-gray-800 mb-6">
               Helping people live their
               <span className="block text-6xl sm:text-8xl text-green-400 mt-2">
                 BEST LIVES
               </span>
             </h1>
-            <p className="mt-6 text-xl text-gray-100 max-w-3xl mx-auto">
+            <p className="mt-6 text-xl  text-gray-600 max-w-3xl mx-auto">
               Health on your mind? We have you covered. Join thousands of fitness enthusiasts
               finding their perfect workout space across Northeast India.
             </p>
@@ -107,38 +106,13 @@ const scrollToGyms = (e: React.MouseEvent) => {
             repeat: Infinity,
             repeatType: "reverse"
           }}
-          className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+          className="absolute bottom-10  left-1/2 transform -translate-x-1/2"
         >
-          <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
-            <div className="w-2 h-2 bg-white rounded-full mt-2"></div>
+          <div className="w-6 h-10 border-2 border-black rounded-full flex justify-center">
+            <div className="w-2 h-2 bg-black rounded-full mt-2"></div>
           </div>
         </motion.div>
       </div>
-
-      {/* Stats Section
-      <div className="bg-gray-50 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
-            {[
-              { number: "300+", text: "Partner Gyms" },
-              { number: "10K+", text: "Active Members" },
-              { number: "7", text: "Major Cities" }
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.2 }}
-                className="text-center p-6 bg-white rounded-lg shadow-lg"
-              >
-                <div className="text-4xl font-bold text-[#6bc272]">{stat.number}</div>
-                <div className="mt-2 text-lg text-gray-600">{stat.text}</div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div> */}
 
       {/* Main Content */}
       <div id="browse-gyms" className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
@@ -170,7 +144,7 @@ const scrollToGyms = (e: React.MouseEvent) => {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search by gym name..."
-                    className="w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-md focus:ring-2 focus:ring-[#6bc272] focus:border-transparent placeholder-gray-400"
+                    className="w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-transparent placeholder-gray-400"
                   />
                   <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 </div>
@@ -184,7 +158,7 @@ const scrollToGyms = (e: React.MouseEvent) => {
             >
               <Link 
                 href="/userbookings" 
-                className="flex items-center justify-center px-6 py-3 bg-[#6bc272] text-white rounded-md hover:bg-[#6bc272]/90 text-sm font-medium transition-colors duration-200 w-full sm:w-auto shadow-md"
+                className="flex items-center justify-center px-6 py-3 bg-black text-white rounded-md hover:bg-gray-800 text-sm font-medium transition-colors duration-200 w-full sm:w-auto shadow-md"
               >
                 <TicketIcon className="h-5 w-5 mr-2" />
                 My Bookings
@@ -195,7 +169,7 @@ const scrollToGyms = (e: React.MouseEvent) => {
 
         {loading ? (
           <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6bc272]"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
           </div>
         ) : (
           <motion.div
@@ -214,9 +188,9 @@ const scrollToGyms = (e: React.MouseEvent) => {
               >
                 <Link 
                   href={`/gyms/${gym.id}`}
-                  className="block group hover:#6bc272"
+                  className="block group hover:bg-gray-50"
                 >
-                  <div className="bg-white rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl border hover:shadow-[#6bc272]/40">
+                  <div className="bg-white rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl border hover:shadow-black/40">
                     <div className="h-48 w-full relative">
                       <Image
                         src={typeof gym.images[0] === 'string' ? gym.images[0] : ''}
@@ -237,7 +211,7 @@ const scrollToGyms = (e: React.MouseEvent) => {
                           {gym.facilities.slice(0, 3).map((facility, index) => (
                             <span
                               key={index}
-                              className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#6bc272]/20 text-[#6bc272]"
+                              className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-200 text-black"
                             >
                               {facility.name}
                             </span>
@@ -257,7 +231,7 @@ const scrollToGyms = (e: React.MouseEvent) => {
                         <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
-                          className="px-4 py-2 bg-[#6bc272] text-white rounded-md hover:bg-[#6bc272]/90 text-sm font-medium transition-colors duration-200 shadow-md"
+                          className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 text-sm font-medium transition-colors duration-200 shadow-md"
                         >
                           View Details
                         </motion.button>
