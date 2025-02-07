@@ -425,7 +425,7 @@ export default function GymDetailsPage() {
                     href={gym.googleMapsLink} 
                     target="_blank" 
                     rel="noreferrer" 
-                    className="ml-4 text-indigo-600 hover:text-indigo-800 text-sm flex items-center"
+                    className="ml-4 text-gray-600 hover:text-[#6bc272] text-sm flex items-center"
                   >
                     {/* <ExternalLinkIcon className="h-4 w-4 mr-1" /> */}
                     View Location
@@ -441,8 +441,8 @@ export default function GymDetailsPage() {
                       className={({ selected }) =>
                         `w-full rounded-lg py-2.5 text-xs md:text-sm font-medium leading-5
                         ${selected
-                          ? 'bg-white text-indigo-700 shadow'
-                          : 'text-gray-600 hover:bg-white/[0.12] hover:text-indigo-600'
+                          ? 'bg-white text-[#6bc272] shadow'
+                          : 'text-gray-600 hover:bg-white/[0.12] hover:text-[#6bc272]'
                         }`
                       }
                     >
@@ -515,7 +515,7 @@ export default function GymDetailsPage() {
                         className={`w-full p-3 rounded-lg  text-gray-600 border text-sm ${
                           selectedPlan?.id === plan.id
                             ? 'border-indigo-600 bg-indigo-50'
-                            : 'border-gray-200 hover:border-indigo-600'
+                            : 'border-gray-200 hover:border-[#6bc272]'
                         }`}
                       >
                         <div className="flex justify-between items-center">
@@ -542,7 +542,7 @@ export default function GymDetailsPage() {
 
                 <button
                   onClick={handleBooking}
-                  className="w-full bg-indigo-600 text-white cursor-pointer py-3 rounded-lg hover:bg-indigo-700 transition-colors text-sm md:text-base"
+                  className="w-full bg-[#6bc272] text-white cursor-pointer py-3 rounded-lg hover:bg-indigo-700 transition-colors text-sm md:text-base"
                   disabled={!selectedPlan || !startDate}
                 >
                   Book Now
