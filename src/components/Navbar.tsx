@@ -23,14 +23,14 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex items-center sm:ml-2 md:ml-0">
-          <Link href="/" className="flex items-center">
+          <div className=" -ml-12 sm:ml-2 md:ml-0">
+          <Link href="/" className=" items-center">
             <Image
               src="/rfithublogo1.png"
               alt="Gym Logo"
-              width={160} // Adjust for responsiveness
-              height={50}
-              className="object-contain"
+              width={200} // Adjust for responsiveness
+              height={60}
+              className="object-contain "
               priority
             />
           </Link>
