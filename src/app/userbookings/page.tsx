@@ -80,7 +80,7 @@ export default function UserBookingsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-white flex justify-center items-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6bc272]"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
       </div>
     );
   }
@@ -110,7 +110,7 @@ export default function UserBookingsPage() {
                 className={`
                   px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200
                   ${activeFilter === id
-                    ? 'bg-[#6bc272] text-white shadow-md'
+                    ? 'bg-black text-white shadow-md'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }
                   whitespace-nowrap
@@ -134,7 +134,7 @@ export default function UserBookingsPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:shadow-[#6bc272]/20"
+                className="bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:shadow-black/20"
               >
                 <div className="p-6">
                   <div className="flex justify-between items-center mb-4">
@@ -144,10 +144,10 @@ export default function UserBookingsPage() {
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
                         booking.status === 'active'
-                          ? 'bg-[#6bc272]/20 text-[#6bc272]'
+                          ? 'bg-gray-200 text-black'
                           : booking.status === 'completed'
                           ? 'bg-gray-100 text-gray-600'
-                          : 'bg-yellow-100 text-yellow-800'
+                          : 'bg-gray-100 text-gray-800'
                       }`}
                     >
                       {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
@@ -157,12 +157,12 @@ export default function UserBookingsPage() {
                   <div className="space-y-2 mb-4">
                     {booking.gymLocation && (
                       <div className="flex items-center text-gray-600">
-                        <MapPinIcon className="h-5 w-5 mr-2 text-[#6bc272]" />
+                        <MapPinIcon className="h-5 w-5 mr-2 text-black" />
                         {booking.gymLocation}
                       </div>
                     )}
                     <div className="flex items-center text-gray-600">
-                      <CalendarIcon className="h-5 w-5 mr-2 text-[#6bc272]" />
+                      <CalendarIcon className="h-5 w-5 mr-2 text-black" />
                       Start Date: {formatDate(booking.startDate)}
                     </div>
                   </div>
@@ -176,7 +176,7 @@ export default function UserBookingsPage() {
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="px-4 py-2 bg-[#6bc272] text-white rounded-md hover:bg-[#6bc272]/90 text-sm font-medium transition-colors duration-200 shadow-md"
+                        className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 text-sm font-medium transition-colors duration-200 shadow-md"
                       >
                         Details
                       </motion.button>
@@ -191,7 +191,6 @@ export default function UserBookingsPage() {
     </div>
   );
 }
-
 
 
 

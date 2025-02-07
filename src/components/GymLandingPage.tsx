@@ -158,7 +158,7 @@ export default function GymLandingPage() {
             >
               <Link 
                 href="/userbookings" 
-                className="flex items-center justify-center px-6 py-3 bg-black text-white rounded-md hover:bg-gray-800 text-sm font-medium transition-colors duration-200 w-full sm:w-auto shadow-md"
+                className="flex items-center justify-center mx-auto px-6 py-3 bg-black text-white rounded-md hover:bg-gray-800 text-sm font-medium transition-colors duration-200 w-3/4 sm:w-auto shadow-md"
               >
                 <TicketIcon className="h-5 w-5 mr-2" />
                 My Bookings
