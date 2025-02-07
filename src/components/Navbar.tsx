@@ -112,17 +112,21 @@ export default function Navbar() {
         {/* Mobile Menu */}
         {menuOpen && (
           <div className="md:hidden bg-white py-2 px-4 shadow-lg">
-            {/* <button
+           <button
               onClick={scrollToGyms}
               className="flex w-full items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 transition duration-200"
             >
               <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 mr-1" />
               Gyms
-            </button> */}
-            <Link href="/" className="flex w-full items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 transition duration-200">
-                  <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 mr-1" />
-                  Gyms
-                </Link>
+            </button>
+           
+              <Link href="/" className="flex w-full items-center px-4 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 transition duration-200">
+                      {/* <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 mr-1" /> */}
+                      Home
+                    </Link>
+           
+            
+            
 
             {!user ? (
               <div className="flex flex-col space-y-2 mt-2">
