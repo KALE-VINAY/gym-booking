@@ -391,7 +391,7 @@ import toast from 'react-hot-toast';
 // import { getStorage, } from 'firebase/storage';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/config/firebase'; // Make sure this import path is correct
-import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
+// import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 // const storage = getStorage();
 
@@ -575,38 +575,38 @@ export default function RegisterGymPage() {
     });
   };
 
-  const handleAddPlan = () => {
-    setFormData({
-      ...formData,
-      plans: [
-        ...formData.plans,
-        {
-          id: (formData.plans.length + 1).toString(),
-          name: '',
-          duration: 'day', // default to a valid value
-          price: 0
-        }
-      ]
-    });
-  };
+  // const handleAddPlan = () => {
+  //   setFormData({
+  //     ...formData,
+  //     plans: [
+  //       ...formData.plans,
+  //       {
+  //         id: (formData.plans.length + 1).toString(),
+  //         name: '',
+  //         duration: 'day', // default to a valid value
+  //         price: 0
+  //       }
+  //     ]
+  //   });
+  // };
 
-  const handleRemovePlan = (planId: string) => {
-    setFormData({
-      ...formData,
-      plans: formData.plans.filter(plan => plan.id !== planId)
-    });
-  };
+  // const handleRemovePlan = (planId: string) => {
+  //   setFormData({
+  //     ...formData,
+  //     plans: formData.plans.filter(plan => plan.id !== planId)
+  //   });
+  // };
 
-  const handlePlanChange = (planId: string, field: 'name' | 'duration' | 'price', value: string | number | 'day' | 'month' | '3months' | '6months' | 'year') => {
-    setFormData({
-      ...formData,
-      plans: formData.plans.map(plan =>
-        plan.id === planId
-          ? { ...plan, [field]: value }
-          : plan
-      )
-    });
-  };
+  // const handlePlanChange = (planId: string, field: 'name' | 'duration' | 'price', value: string | number | 'day' | 'month' | '3months' | '6months' | 'year') => {
+  //   setFormData({
+  //     ...formData,
+  //     plans: formData.plans.map(plan =>
+  //       plan.id === planId
+  //         ? { ...plan, [field]: value }
+  //         : plan
+  //     )
+  //   });
+  // };
 
 
 // RegisterGymPage.tsx

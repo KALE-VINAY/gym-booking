@@ -961,7 +961,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { gymService } from '@/services/gymService';
 import { bookingService } from '@/services/bookingService';
-import { Gym, GymPlan ,Booking } from '@/types';
+import { Gym, GymPlan  } from '@/types';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import toast from 'react-hot-toast';
@@ -1000,7 +1000,7 @@ const getEndDate = (startDate: Date, plan: GymPlan): Date => {
 
 const getHighlightedDates = (startDate: Date, endDate: Date): Date[] => {
   const dates: Date[] = [];
-  let currentDate = new Date(startDate);
+  const currentDate = new Date(startDate);
 
   while (currentDate <= endDate) {
     dates.push(new Date(currentDate));

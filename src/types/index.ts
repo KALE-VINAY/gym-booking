@@ -96,22 +96,22 @@ export interface Gym {
     plan: GymPlan; // Add plan property
   }
 
-  interface BookingData extends Omit<Booking, 'id'> {
-    userId: string;
-    gymId: string;
-    planId: string;
-    startDate: Date;
-    endDate: Date;
-    status: Booking['status'];
-    otp: string;
-    userDetails: {
-      id: string;
-      name: string;
-      email: string;
-    };
-    gym: Gym; // Add gym property
-    plan: GymPlan; // Add plan property
-  }
+  // interface BookingData extends Omit<Booking, 'id'> {
+  //   userId: string;
+  //   gymId: string;
+  //   planId: string;
+  //   startDate: Date;
+  //   endDate: Date;
+  //   status: Booking['status'];
+  //   otp: string;
+  //   userDetails: {
+  //     id: string;
+  //     name: string;
+  //     email: string;
+  //   };
+  //   gym: Gym; // Add gym property
+  //   plan: GymPlan; // Add plan property
+  // }
 
   export const initialSchedule: WeeklySchedule = {
     monday: { 
