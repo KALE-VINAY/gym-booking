@@ -1278,7 +1278,7 @@ export default function GymDetailsPage() {
                         onClick={() => handlePlanSelection(plan)}
                         className={`w-full p-3 rounded-lg text-gray-600 border text-sm ${
                           selectedPlan?.id === plan.id
-                            ? 'border-black bg-gray-50'
+                            ? 'border-black bg-gray-300'
                             : 'border-gray-200 hover:border-black'
                         }`}
                       >
