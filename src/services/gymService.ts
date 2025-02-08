@@ -291,9 +291,9 @@ export const gymService = {
         updateData.plans = updateData.plans.map(plan => ({
           id: plan.id,
           name: plan.name.trim(),
-          duration: plan.duration as 'day' | '1Week' | '3months' | '6months' | 'year',
+          duration: plan.duration as 'day' | 'month' | '3months' | '6months' | 'year',
           price: Number(plan.price),
-          isActive: plan.isActive
+          // isActive: plan.isActive
         }));
       }
 

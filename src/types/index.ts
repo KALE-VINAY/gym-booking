@@ -63,20 +63,20 @@ export interface Gym {
     isOpen: boolean;
   }
   
-  // export interface GymPlan {
-  //   id: string;
-  //   name: string;
-  //   duration: 'day'|'1Week' | '3months' | '6months' | 'year';
-  //   price: number;
-  // }
-
   export interface GymPlan {
     id: string;
     name: string;
-    duration: string;
+    duration: 'day'|'month' | '3months' | '6months' | 'year';
     price: number;
-    isActive: boolean;
   }
+
+  // export interface GymPlan {
+  //   id: string;
+  //   name: string;
+  //   duration: string;
+  //   price: number;
+  //   isActive: boolean;
+  // }
   
   export interface Booking {
     id: string;
@@ -92,8 +92,26 @@ export interface Gym {
       name: string;
       email: string;
     };
+    gym: Gym; // Add gym property
+    plan: GymPlan; // Add plan property
   }
 
+  interface BookingData extends Omit<Booking, 'id'> {
+    userId: string;
+    gymId: string;
+    planId: string;
+    startDate: Date;
+    endDate: Date;
+    status: Booking['status'];
+    otp: string;
+    userDetails: {
+      id: string;
+      name: string;
+      email: string;
+    };
+    gym: Gym; // Add gym property
+    plan: GymPlan; // Add plan property
+  }
 
   export const initialSchedule: WeeklySchedule = {
     monday: { 

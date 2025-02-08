@@ -474,10 +474,17 @@ export default function RegisterGymPage() {
     plans: [
       {
         id: '1',
-        name: '',
-        duration: '',
+        name: 'Daily',
+        duration: 'day'as const,
+        //  as 'day' | 'month' | '3months' | '6months' | 'year',
         price: 0
-      }
+      },
+      //       { id: '1', name: 'Daily Pass', duration: 'day' as const, price: 0 },
+      { id: '2', name: '1 Month', duration: 'month' as const, price: 0 },
+      { id: '3', name: '3 Months', duration: '3months' as const, price: 0 },
+      { id: '4', name: '6 Months', duration: '6months' as const, price: 0 },
+      { id: '5', name: 'Annual', duration: 'year' as const, price: 0 },
+
     ],
   });
 
@@ -576,7 +583,7 @@ export default function RegisterGymPage() {
         {
           id: (formData.plans.length + 1).toString(),
           name: '',
-          duration: '',
+          duration: 'day', // default to a valid value
           price: 0
         }
       ]
@@ -590,7 +597,7 @@ export default function RegisterGymPage() {
     });
   };
 
-  const handlePlanChange = (planId: string, field: 'name' | 'duration' | 'price', value: string | number) => {
+  const handlePlanChange = (planId: string, field: 'name' | 'duration' | 'price', value: string | number | 'day' | 'month' | '3months' | '6months' | 'year') => {
     setFormData({
       ...formData,
       plans: formData.plans.map(plan =>
@@ -638,9 +645,9 @@ const handleSubmit = async (e: React.FormEvent) => {
       plans: formData.plans.map(plan => ({
         id: plan.id,
         name: plan.name.trim(),
-        duration: plan.duration.trim(),
+        duration: plan.duration,
         price: Number(plan.price),
-        isActive: true
+        // isActive: true
       })),
       ownerId: user.uid,
     };
@@ -753,8 +760,9 @@ const handleSubmit = async (e: React.FormEvent) => {
 
         {/* Equipment */}
         <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
-          <h2 className=" text-sm  md:text-xl   text-gray-800 font-semibold mb-4">Equipment</h2>
-          
+          <h2 className=" text-sm  md:text-xl   text-gray-800 font-semibold mb-4">Additional info (Gym rules & Equipment ) </h2>
+          <h2 className=" text-sm  md:text-xl   text-gray-500 font-semibold mb-4">Ex: all are available and no rules added</h2>
+
           <div className="space-y-2">
             {formData.equipment.map((item, index) => (
               <div key={index} className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
@@ -880,7 +888,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           </div>
 
         {/* Plans */}
-        {/* <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
+        <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
           <h2 className="text-xl font-semibold  text-gray-800  mb-4">Membership Plans</h2>
           
           <div className="space-y-4">
@@ -905,9 +913,9 @@ const handleSubmit = async (e: React.FormEvent) => {
               </div>
             ))}
           </div>
-        </div> */}
+        </div>
               {/* Updated Plans Section */}
-      <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
+      {/* <div className="bg-white p-4 sm:p-6 rounded-lg shadow">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Membership Plans</h2>
         
         <div className="space-y-4">
@@ -929,7 +937,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 <input
                   type="text"
                   value={plan.duration}
-                  onChange={(e) => handlePlanChange(plan.id, 'duration', e.target.value)}
+                  onChange={(e) => handlePlanChange(plan.id, 'duration', e.target.value as 'day' | 'month' | '3months' | '6months' | 'year')}
                   placeholder="e.g., 1 month, 3 months"
                   className="w-full p-2 border text-gray-800 rounded-md text-sm"
                 />
@@ -968,7 +976,7 @@ const handleSubmit = async (e: React.FormEvent) => {
             Add Plan
           </button>
         </div>
-      </div>
+      </div> */}
 
         {isGymOwner && (
           <button

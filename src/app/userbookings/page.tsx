@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { bookingService } from '@/services/bookingService';
 import { gymService } from '@/services/gymService';
@@ -10,6 +11,7 @@ import Navbar from '@/components/Navbar';
 import { motion } from 'framer-motion';
 
 export default function UserBookingsPage() {
+  const router = useRouter();
   const { user } = useAuth();
   const [bookings, setBookings] = useState<(Booking & { gymName?: string; gymLocation?: string; planName?: string })[]>([]);
   const [loading, setLoading] = useState(true);
@@ -21,7 +23,9 @@ export default function UserBookingsPage() {
     const parsedDate = new Date(date);
     return isNaN(parsedDate.getTime()) ? null : parsedDate;
   };
-
+  const handleViewDetails = (bookingId: string) => {
+    router.push(`/booking-confirmation/${bookingId}`);
+  };
   useEffect(() => {
     const fetchUserBookings = async () => {
       if (!user) return;
@@ -165,6 +169,10 @@ export default function UserBookingsPage() {
                       <CalendarIcon className="h-5 w-5 mr-2 text-black" />
                       Start Date: {formatDate(booking.startDate)}
                     </div>
+                    <div className="flex items-center text-gray-600">
+                      <CalendarIcon className="h-5 w-5 mr-2 text-black" />
+                      End Date: {formatDate(booking.endDate)}
+                    </div>
                   </div>
 
                   <div className="border-t pt-4">
@@ -176,6 +184,7 @@ export default function UserBookingsPage() {
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
+                        onClick={() => handleViewDetails(booking.id)}
                         className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 text-sm font-medium transition-colors duration-200 shadow-md"
                       >
                         Details
@@ -193,7 +202,14 @@ export default function UserBookingsPage() {
 }
 
 
+// test
+// Upcoming
+// Tezpur
+// Start Date: March 13, 2025
+// End Date: March 12, 2026
+// Plan: Annual
 
+// OTP: 535129
 
 
 
