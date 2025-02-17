@@ -325,7 +325,7 @@ export default function GymLandingPage() {
           <div>
             <p className="text-gray-700 mt-16 text-xl">Hello, {getUserDisplayName()} </p>
             {/* {user?.name || "there"} */}
-            <h2 className="text-2xl font-bold text-gray-900">Let's start your day</h2>
+            <h2 className="text-2xl font-bold text-gray-900">Let&#39;s start your day</h2>
           </div>
           {user && user.photoURL ? (
               <Image 
@@ -451,7 +451,7 @@ export default function GymLandingPage() {
             <h1 className="text-4xl sm:text-6xl font-bold text-white mb-6">
               Hello, {getUserDisplayName()}!
               <span className="block text-5xl sm:text-7xl mt-2">
-                Let's start your <span className="text-white">day</span>
+                Let&#39;s start your <span className="text-white">day</span>
               </span>
             </h1>
             <p className="mt-6 text-xl text-gray-200 font-bold max-w-3xl">
@@ -503,7 +503,7 @@ export default function GymLandingPage() {
           slidesPerView={1.2}
           className="gym-carousel"
         >
-          {premiumGyms.slice(0, 5).map((gym, index) => (
+          {premiumGyms.slice(0, 5).map((gym) => (
             <SwiperSlide key={`premium-${gym.id}`}>
               <Link href={`/gyms/${gym.id}`}>
                 <div className="relative h-44 rounded-xl overflow-hidden">
