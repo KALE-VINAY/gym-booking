@@ -336,8 +336,8 @@ export default function GymLandingPage() {
                 className="object-cover mt-4 rounded-full"
               />
             ) : (
-              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                <UserIcon className="h-6 w-6 text-gray-500" />
+              <div className="  flex  justify-center">
+                <UserIcon className="h-6 w-6 " />
               </div>
             )}
         </div>
