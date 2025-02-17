@@ -973,6 +973,7 @@ import {
   ChevronRightIcon 
 } from '@heroicons/react/24/outline';
 import Image from 'next/image';
+import Navbar from '@/components/Navbar';
 
 const getEndDate = (startDate: Date, plan: GymPlan): Date => {
   const endDate = new Date(startDate);
@@ -1122,8 +1123,9 @@ export default function GymDetailsPage() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <div className="relative mb-8 group">
+      <Navbar/>
+      <div className="max-w-7xl  mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div className="relative mt-16 mb-8 group">
           <div 
             ref={carouselRef}
             className="relative w-full h-96 md:h-[500px] overflow-hidden rounded-lg"
@@ -1264,34 +1266,65 @@ export default function GymDetailsPage() {
 
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl text-gray-600 font-semibold mb-4">Book a Session</h2>
+              <h2 className="text-2xl text-gray-800 font-bold mb-2">Choose your Transformation Package</h2>
+              <p className="text-gray-500 mb-8">Choose your plan and make modern online conversation magic</p>
               
               <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Select Plan
-                  </label>
-                  <div className="space-y-2">
-                    {gym.plans.map((plan) => (
+                <div className="space-y-4">
+                  {gym.plans.map((plan) => (
+                    <div key={plan.id} className="relative">
                       <button
-                        key={plan.id}
                         onClick={() => handlePlanSelection(plan)}
-                        className={`w-full p-3 rounded-lg text-gray-600 border text-sm ${
+                        className={`w-full p-6 h-10 rounded-xl text-left border-2 transition-all ${
                           selectedPlan?.id === plan.id
-                            ? 'border-black bg-gray-300'
-                            : 'border-gray-200 hover:border-black'
+                            ? 'border-gray-500 bg-gray-50'
+                            : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
-                        <div className="flex justify-between items-center">
-                          <span>{plan.name}</span>
-                          <span>₹{plan.price}</span>
+                        <div className="flex justify-between -my-4 items-center">
+                          <div>
+                            <span className="text-gray-800 ml-8  font-medium text-sm md:text-base">
+                              {plan.name}
+                            </span>
+                            
+                            {/* Only show saving text for non-monthly plans - assuming first plan is monthly */}
+                            {/* {gym.plans.indexOf(plan) > 0 && (
+                              <div className="text-green-600 text-sm mt-1">
+                                Saving ₹{(gym.plans[0].price * (gym.plans.indexOf(plan) + 1) - plan.price).toFixed(0)}
+                              </div>
+                            )} */}
+                          </div>
+                          
+                          <div className="text-right">
+                            <span className="text-sm md:text-base font-bold text-gray-900 flex items-center">
+                              <span className="text-lg mr-0.5">₹</span> {plan.price}
+                            </span>
+                            
+                            {/* Only show original price for non-monthly plans */}
+                            {/* {gym.plans.indexOf(plan) > 0 && (
+                              <div className="text-gray-400 text-sm line-through mt-0.5">
+                                ₹{(gym.plans[0].price * (gym.plans.indexOf(plan) + 1)).toFixed(0)}
+                              </div>
+                            )} */}
+                          </div>
                         </div>
                       </button>
-                    ))}
-                  </div>
+                      
+                      {/* Radio button overlay */}
+                      <div className="absolute left-6 top-1/2 transform -translate-y-1/2">
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                          selectedPlan?.id === plan.id ? 'border-gray-500' : 'border-gray-300'
+                        }`}>
+                          {selectedPlan?.id === plan.id && (
+                            <div className="w-3 h-3 rounded-full bg-gray-500"></div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
 
-                <div>
+                <div className="mt-8">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Start Date (MM/DD/YYYY)
                   </label>
@@ -1300,24 +1333,24 @@ export default function GymDetailsPage() {
                     onChange={handleDateSelection}
                     minDate={new Date()}
                     highlightDates={highlightedDates}
-                    className="w-full p-2 cursor-pointer border rounded-lg text-sm"
+                    className="w-full p-3 cursor-pointer text-gray-700 border-2 border-gray-200 rounded-lg text-sm focus:border-gray-500 focus:ring-1 focus:ring-gray-500 outline-none"
                     placeholderText="Select start date"
                     dayClassName={date => 
                       highlightedDates.some(highlighted => 
                         highlighted.toDateString() === date.toDateString()
-                      ) ? "bg-green-50 rounded-full" : ""
+                      ) ? "bg-gray-50 rounded-full" : ""
                     }
                   />
                   {endDate && (
                     <div className="mt-2 text-sm text-gray-600">
-                      End Date: {endDate.toLocaleDateString()}
+                      End Date[MM/DD/YYYY]: {endDate.toLocaleDateString()}
                     </div>
                   )}
                 </div>
 
                 <button
                   onClick={handleBooking}
-                  className="w-full bg-black text-white cursor-pointer py-3 rounded-lg hover:bg-gray-800 transition-colors text-sm md:text-base"
+                  className="w-full mt-6 bg-gray-600 text-white cursor-pointer py-4 rounded-xl hover:bg-gray-700 transition-colors text-base font-medium"
                   disabled={!selectedPlan || !startDate}
                 >
                   Book Now

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { Menu } from '@headlessui/react';
-import { UserCircleIcon, MagnifyingGlassIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { UserCircleIcon,  Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -9,14 +9,14 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const scrollToGyms = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const element = document.getElementById('browse-gyms');
-    if (element) {
-      const offset = element.offsetTop - 64; // 64px is navbar height
-      window.scrollTo({ top: offset, behavior: 'smooth' });
-    }
-  };
+  // const scrollToGyms = (e: React.MouseEvent) => {
+  //   e.preventDefault();
+  //   const element = document.getElementById('browse-gyms');
+  //   if (element) {
+  //     const offset = element.offsetTop - 64; // 64px is navbar height
+  //     window.scrollTo({ top: offset, behavior: 'smooth' });
+  //   }
+  // };
 
   return (
     <nav className="bg-white shadow-lg fixed w-full z-50">
@@ -39,13 +39,13 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            <button
+            {/* <button
               onClick={scrollToGyms}
               className="flex flex-row items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 transition duration-200"
             >
               <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 mr-1" />
               Gyms
-            </button>
+            </button> */}
 
             {!user ? (
               <div className="flex items-center space-x-4">
@@ -112,13 +112,13 @@ export default function Navbar() {
         {/* Mobile Menu */}
         {menuOpen && (
           <div className="md:hidden bg-white py-2 px-4 shadow-lg">
-           <button
+           {/* <button
               onClick={scrollToGyms}
               className="flex w-full items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 transition duration-200"
             >
               <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 mr-1" />
               Gyms
-            </button>
+            </button> */}
            
               <Link href="/" className="flex w-full items-center px-4 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 transition duration-200">
                       {/* <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 mr-1" /> */}

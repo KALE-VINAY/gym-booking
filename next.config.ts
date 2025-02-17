@@ -23,6 +23,11 @@ const nextConfig: NextConfig = {
         hostname: "images.creativemarket.com",
         pathname: "/**", // Allow all paths from this hostname
       },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        pathname: "/**", // Allow all paths for Google profile pictures
+      },
     ],
   },
 };
