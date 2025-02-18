@@ -323,9 +323,9 @@ export default function GymLandingPage() {
       <div className="md:hidden bg-white p-4 shadow-sm">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-gray-700 mt-16 text-xl">Hello, {getUserDisplayName()} </p>
+            <p className="text-gray-900 mt-16 font-bold text-sm">Hello, {getUserDisplayName()} </p>
             {/* {user?.name || "there"} */}
-            <h2 className="text-2xl font-bold text-gray-900">Let&#39;s start your day</h2>
+            <h2 className="text-xl font-bold text-gray-900">Let&#39;s start your day</h2>
           </div>
           {user && user.photoURL ? (
               <Image 
@@ -333,7 +333,7 @@ export default function GymLandingPage() {
                 alt="Profile"
                 width={40}
                 height={40}
-                className="object-cover mt-4 rounded-full"
+                className="object-cover mt-8 rounded-full"
               />
             ) : (
               <div className="  flex  justify-center">

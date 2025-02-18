@@ -739,12 +739,19 @@ export default function Login() {
 
       <div className="relative z-10 w-full max-w-md px-4 py-6 md:py-0">
         <div className="text-center mb-6 text-white">
-          <div className="mx-auto w-12 h-12 mb-4">
-            <svg viewBox="0 0 24 24" fill="white">
-              <path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14 4.14 5.57 2 7.71 3.43 9.14 2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22 14.86 20.57z" />
-            </svg>
+          <div className="mx-auto w-40 h-40 rounded-full bg-white/35 mb-2 mt-32 md:mt-0 p-2">
+          <Image 
+              src="/rfithublogo.png" 
+              alt="Background"
+              width={400}
+              height={400}
+              className=" z-10"
+            />
+            
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Welcome to RFITHUB</h1>
+          <h1 className="text-2xl md:text-4xl font-bold mb-2">Welcome to RFITHUB
+            
+          </h1>
           <p className="text-gray-300 text-lg">Plan your workout time with us</p>
         </div>
 
