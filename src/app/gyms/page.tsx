@@ -107,27 +107,27 @@
 //   );
 // }
 
-// src/app/gyms/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Gym, Location } from '@/types';
+import { Gym } from '@/types';
 import { gymService } from '@/services/gymService';
-import LocationFilter from '@/components/LocationFilter';
 import Link from 'next/link';
-import { MapPinIcon, CalendarIcon } from '@heroicons/react/24/outline';
+import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
 export default function GymsPage() {
   const [gyms, setGyms] = useState<Gym[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedLocation, setSelectedLocation] = useState<Location>('ALL');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [categoryGyms, setCategoryGyms] = useState<Gym[]>([]);
 
   useEffect(() => {
     const fetchGyms = async () => {
       try {
         setLoading(true);
-        const fetchedGyms = await gymService.getGyms(selectedLocation);
+        const fetchedGyms = await gymService.getGyms('ALL');
         setGyms(fetchedGyms);
       } catch (error) {
         console.error('Error fetching gyms:', error);
@@ -135,101 +135,125 @@ export default function GymsPage() {
         setLoading(false);
       }
     };
-
     fetchGyms();
-  }, [selectedLocation]);
+  }, []);
+
+  useEffect(() => {
+    const fetchCategoryGyms = async () => {
+      if (selectedCategory === 'all') {
+        setCategoryGyms(gyms);
+        return;
+      }
+
+      try {
+        const db = getFirestore();
+        const docRef = doc(db, 'gymOwners', `${selectedCategory}gyms`);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+          const gymIds = docSnap.data().uids || [];
+          const filteredGyms = gyms.filter(gym => gymIds.includes(gym.id));
+          setCategoryGyms(filteredGyms);
+        } else {
+          setCategoryGyms([]);
+        }
+      } catch (error) {
+        console.error('Error fetching category gyms:', error);
+        setCategoryGyms([]);
+      }
+    };
+
+    if (gyms.length > 0) {
+      fetchCategoryGyms();
+    }
+  }, [selectedCategory, gyms]);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-6 sm:py-12 px-4 sm:px-6 lg:px-8">
-      <div className="container mx-auto max-w-7xl">
-        <div className="mb-6 sm:mb-10 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 text-center md:text-left">
-            Find Your Perfect Gym
-          </h1>
-          <div className="w-full md:w-64">
-            <LocationFilter
-              selectedLocation={selectedLocation}
-              onChange={setSelectedLocation}
-            />
-          </div>
-        </div>
+    <div className="min-h-screen bg-white">
+      <div className="bg-gray-900 w-full text-white py-4 px-6 flex items-center  mx-auto">
+        <Link href="/" className="flex items-center">
+          <ChevronLeftIcon className="h-6 w-6 mr-2" />
+        </Link>
+        <h1 className="text-xl font-semibold">All Gyms</h1>
+      </div>
 
-        {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 sm:h-16 w-12 sm:w-16 border-t-4 border-b-4 border-indigo-600"></div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {gyms.map((gym) => (
-              <Link 
-                key={gym.id}
-                href={`/gyms/${gym.id}`}
-                className="group"
-              >
-                <div className="bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-                  <div className="h-40 sm:h-56 w-full overflow-hidden">
-                    <Image
-                      src={typeof gym.images[0] === 'string' ? gym.images[0] : URL.createObjectURL(gym.images[0])}
-                      alt={gym.name}
-                      layout="fill"
-                      objectFit="cover"
-                      className="group-hover:scale-110 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="p-4 sm:p-6">
-                    <h3 className="text-base sm:text-xl font-bold text-gray-900 mb-2 truncate">
-                      {gym.name}
-                    </h3>
-                    <div className="flex items-center text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3">
-                      <MapPinIcon className="h-4 sm:h-5 w-4 sm:w-5 mr-2 text-indigo-600" />
-                      <span className="truncate">{gym.location}</span>
-                    </div>
-                    <div className="mb-3 sm:mb-4">
-                      <div className="flex flex-wrap gap-1 sm:gap-2">
-                        {gym.facilities.slice(0, 3).map((facility, index) => (
-                          <span
-                            key={index}
-                            className="inline-flex items-center px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium bg-indigo-100 text-indigo-800"
-                      >
-                        {facility.name}
-                      </span>
-                    ))}
-                    {gym.facilities.length > 3 && (
-                      <span className="inline-flex items-center px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium bg-gray-100 text-gray-800">
-                        +{gym.facilities.length - 3} more
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center text-xs sm:text-sm text-gray-600">
-                    <CalendarIcon className="h-4 sm:h-5 w-4 sm:w-5 mr-2 text-green-600" />
-                    Plans from ₹{Math.min(...gym.plans.map(p => p.price))}
-                  </div>
-                  <button className="px-3 py-1.5 sm:px-4 sm:py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors text-[10px] sm:text-sm font-medium">
-                    View Details
-                  </button>
+           {/* Category Buttons */}
+           <div className="px-4 py-3 overflow-x-auto hide-scrollbar">
+        <div className="flex space-x-3">
+          <button
+            onClick={() => setSelectedCategory('all')}
+            className={`whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              selectedCategory === 'all'
+                ? 'bg-white text-black'
+                : 'bg-gray-800 text-white'
+            }`}
+          >
+            All 
+          </button>
+          <button
+            onClick={() => setSelectedCategory('premium')}
+            className={`whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              selectedCategory === 'premium'
+                ? 'bg-white text-black'
+                : 'bg-gray-800 text-white'
+            }`}
+          >
+            Premium
+          </button>
+          <button
+            onClick={() => setSelectedCategory('affordable')}
+            className={`whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              selectedCategory === 'affordable'
+                ? 'bg-white text-black'
+                : 'bg-gray-800 text-white'
+            }`}
+          >
+            Affordable
+          </button>
+          <button
+            onClick={() => setSelectedCategory('budgetfriendly')}
+            className={`whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              selectedCategory === 'budgetfriendly'
+                ? 'bg-white text-black'
+                : 'bg-gray-800 text-white'
+            }`}
+          >
+            Budget Friendly
+          </button>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></div>
+        </div>
+      ) : (
+        <div className="px-6 py-4 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {categoryGyms.map((gym) => (
+            <Link key={gym.id} href={`/gyms/${gym.id}`} className="block rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition">
+              <div className="relative h-28 md:h-48">
+                <Image
+                  src={typeof gym.images[0] === 'string' ? gym.images[0] : ''}
+                  alt={gym.name}
+                  layout="fill"
+                  objectFit="cover"
+                  className="brightness-75"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/60 flex items-end p-4">
+                  <h3 className="text-white text-xl font-bold">{gym.name}</h3>
                 </div>
               </div>
-            </div>
-          </Link>
-        ))}
-      </div>
-    )}
+            </Link>
+          ))}
+        </div>
+      )}
 
-    {gyms.length === 0 && !loading && (
-      <div className="text-center py-12 sm:py-16 bg-white rounded-xl shadow-md">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-700 mb-3 sm:mb-4">
-          No Gyms Found
-        </h2>
-        <p className="text-xs sm:text-sm text-gray-500 px-4">
-          Try adjusting your location filter or check back later.
-        </p>
-      </div>
-    )}
-  </div>
-</div>
-
-);
-
+      {categoryGyms.length === 0 && !loading && (
+        <div className="flex flex-col items-center justify-center h-64 text-gray-600">
+          <p className="text-xl font-semibold">No Gyms Found</p>
+          <p className="text-sm mt-2">Try selecting a different category</p>
+        </div>
+      )}
+    </div>
+  );
 }

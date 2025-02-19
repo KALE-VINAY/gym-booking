@@ -264,13 +264,19 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
+
 
 export default function GymLandingPage() {
+
   const [gyms, setGyms] = useState<Gym[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedLocation, setSelectedLocation] = useState<Location>('ALL');
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('premium');
+  const [categoryGyms, setCategoryGyms] = useState<Gym[]>([]);
+
 
   useEffect(() => {
     const fetchGyms = async () => {
@@ -288,6 +294,31 @@ export default function GymLandingPage() {
     fetchGyms();
   }, [selectedLocation]);
 
+  useEffect(() => {
+    const fetchCategoryGyms = async () => {
+      try {
+        const db = getFirestore();
+        const docRef = doc(db, 'gymOwners', `${selectedCategory}gyms`);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+          const gymIds = docSnap.data().uids || [];
+          const filteredGyms = gyms.filter(gym => gymIds.includes(gym.id));
+          setCategoryGyms(filteredGyms);
+        } else {
+          setCategoryGyms([]);
+        }
+      } catch (error) {
+        console.error('Error fetching category gyms:', error);
+        setCategoryGyms([]);
+      }
+    };
+
+    if (gyms.length > 0) {
+      fetchCategoryGyms();
+    }
+  }, [selectedCategory, gyms]);
+
   const filteredGyms = gyms.filter(gym =>
     gym.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -302,9 +333,9 @@ export default function GymLandingPage() {
   };
 
   // Split gyms into categories for carousel display
-  const premiumGyms = filteredGyms.filter(gym => 
-    gym.plans.some(plan => plan.price >= 1500)
-  );
+  // const premiumGyms = filteredGyms.filter(gym => 
+  //   gym.plans.some(plan => plan.price >= 1500)
+  // );
   // const affordableGyms = filteredGyms.filter(gym => 
   //   gym.plans.some(plan => plan.price < 1500)
   // );
@@ -492,10 +523,85 @@ export default function GymLandingPage() {
         </motion.div>
       </div>
 
-      {/* Premium Gym Carousel - Mobile */}
-      <div className="md:hidden mt-5 px-4">
+      {/* Modified Premium Gym Carousel - Mobile */}
+        <div className="md:hidden mt-5 px-4">
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="text-lg text-black font-semibold">Featured Gyms</h3>
+            <Link href="/gyms" className="text-blue-500 text-sm">See All</Link>
+          </div>
+          
+          {/* Category Selection Buttons */}
+          <div className="flex space-x-2 mb-4 overflow-x-auto hide-scrollbar">
+            <button
+              onClick={() => setSelectedCategory('premium')}
+              className={`min-w-fit px-4 py-1.5 rounded-full text-sm ${
+                selectedCategory === 'premium' 
+                  ? 'bg-gray-800 text-white' 
+                  : 'bg-gray-200 text-gray-800'
+              }`}
+            >
+              Premium
+            </button>
+            <button
+              onClick={() => setSelectedCategory('affordable')}
+              className={`min-w-fit px-4 py-1.5 rounded-full text-sm ${
+                selectedCategory === 'affordable' 
+                  ? 'bg-gray-800 text-white' 
+                  : 'bg-gray-200 text-gray-800'
+              }`}
+            >
+              Affordable
+            </button>
+            <button
+              onClick={() => setSelectedCategory('budgetfriendly')}
+              className={`min-w-fit px-4 py-1.5 rounded-full text-sm ${
+                selectedCategory === 'budgetfriendly' 
+                  ? 'bg-gray-800 text-white' 
+                  : 'bg-gray-200 text-gray-800'
+              }`}
+            >
+              Budget Friendly
+            </button>
+          </div>
+
+          <Swiper
+            spaceBetween={15}
+            slidesPerView={1.2}
+            className="gym-carousel"
+          >
+            {categoryGyms.map((gym) => (
+              <SwiperSlide key={`category-${gym.id}`}>
+                <Link href={`/gyms/${gym.id}`}>
+                  <div className="relative h-44 rounded-xl overflow-hidden">
+                    <Image
+                      src={typeof gym.images[0] === 'string' ? gym.images[0] : ''}
+                      alt={gym.name}
+                      layout="fill"
+                      objectFit="cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+                      <h4 className="text-white font-semibold">{gym.name}</h4>
+                      <div className="flex items-center text-white/90 text-sm mt-1">
+                        <MapPinIcon className="h-3 w-3 mr-1" />
+                        <span className="truncate">{gym.location}</span>
+                      </div>
+                      <div className="mt-2 flex items-center">
+                        <span className="text-white text-xs bg-black/50 px-2 py-0.5 rounded-full">
+                          Day Pass Starting from ₹{Math.min(...gym.plans.map(p => p.price))}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+
+       {/* Premium Gym Carousel - Mobile
+       <div className="md:hidden mt-5 px-4">
         <div className="flex justify-between items-center mb-3">
-          <h3 className="text-lg text-black font-semibold">Premium Gyms</h3>
+          <h3 className="text-lg text-black font-semibold">Affordable Gyms</h3>
           <Link href="#premium" className="text-blue-500 text-sm">See All</Link>
         </div>
         <Swiper
@@ -503,7 +609,7 @@ export default function GymLandingPage() {
           slidesPerView={1.2}
           className="gym-carousel"
         >
-          {premiumGyms.slice(0, 5).map((gym) => (
+          {affordableGyms.slice(0, 5).map((gym) => (
             <SwiperSlide key={`premium-${gym.id}`}>
               <Link href={`/gyms/${gym.id}`}>
                 <div className="relative h-44 rounded-xl overflow-hidden">
@@ -530,7 +636,7 @@ export default function GymLandingPage() {
             </SwiperSlide>
           ))}
         </Swiper>
-      </div>
+      </div> */}
 
       {/* Main Content Section */}
       <div id="browse-gyms" className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
