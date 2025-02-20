@@ -110,24 +110,29 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Gym } from '@/types';
+import { Gym, Location } from '@/types';
 import { gymService } from '@/services/gymService';
 import Link from 'next/link';
-import { ChevronLeftIcon } from '@heroicons/react/24/outline';
+import { ChevronLeftIcon, MagnifyingGlassIcon, MapPinIcon, CalendarIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
+// import Navbar from '@/components/Navbar';
+import LocationFilter from '@/components/LocationFilter';
+import { motion } from 'framer-motion';
 
 export default function GymsPage() {
   const [gyms, setGyms] = useState<Gym[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedLocation, setSelectedLocation] = useState<Location>('ALL');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [categoryGyms, setCategoryGyms] = useState<Gym[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchGyms = async () => {
       try {
         setLoading(true);
-        const fetchedGyms = await gymService.getGyms('ALL');
+        const fetchedGyms = await gymService.getGyms(selectedLocation);
         setGyms(fetchedGyms);
       } catch (error) {
         console.error('Error fetching gyms:', error);
@@ -136,7 +141,7 @@ export default function GymsPage() {
       }
     };
     fetchGyms();
-  }, []);
+  }, [selectedLocation]);
 
   useEffect(() => {
     const fetchCategoryGyms = async () => {
@@ -168,24 +173,87 @@ export default function GymsPage() {
     }
   }, [selectedCategory, gyms]);
 
+  const filteredGyms = categoryGyms.filter(gym =>
+    gym.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="min-h-screen bg-white">
-      <div className="bg-gray-900 w-full text-white py-4 px-6 flex items-center  mx-auto">
-        <Link href="/" className="flex items-center">
-          <ChevronLeftIcon className="h-6 w-6 mr-2" />
-        </Link>
-        <h1 className="text-xl font-semibold">All Gyms</h1>
+    <div className="min-h-screen bg-gray-50">
+      {/* <Navbar /> */}
+
+      {/* Mobile Header */}
+      <div className="md:hidden  ">
+        <div className="bg-gray-900 h-20 w-full text-white py-4 px-6 flex items-center ">
+          <Link href="/" className="flex items-center">
+            <ChevronLeftIcon className="h-6 w-6 mr-2" />
+          </Link>
+          <h1 className="text-xl font-semibold">All Gyms</h1>
+        </div>
+
+        {/* Mobile Search and Location */}
+        <div className="p-4 bg-white shadow-sm">
+          <div className="space-y-3">
+            {/* <div className="relative">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search gyms..."
+                className="w-full px-4 py-2 pr-10 text-gray-900 bg-gray-100 border-none rounded-lg focus:ring-2 focus:ring-black"
+              />
+              <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+            </div> */}
+            <LocationFilter
+              selectedLocation={selectedLocation}
+              onChange={setSelectedLocation}
+            />
+          </div>
+        </div>
       </div>
 
-           {/* Category Buttons */}
-           <div className="px-4 py-3 overflow-x-auto hide-scrollbar">
-        <div className="flex space-x-3">
+      {/* Desktop Header */}
+      <div className="hidden md:block bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+          <div className="md:flex md:items-center md:justify-between">
+            <div className="flex-1 min-w-0">
+              <h2 className="text-3xl font-bold leading-7 text-gray-900 sm:truncate">
+                Discover Your Perfect Gym
+              </h2>
+              <p className="mt-2 text-sm text-gray-500">
+                Find and compare gyms across different locations and price ranges
+              </p>
+            </div>
+            <div className="mt-4 flex md:mt-0 md:ml-4 space-x-4">
+              <div className="w-64">
+                <LocationFilter
+                  selectedLocation={selectedLocation}
+                  onChange={setSelectedLocation}
+                />
+              </div>
+              <div className="relative w-64">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search gyms..."
+                  className="w-full px-4 py-2 pr-10 text-gray-900 bg-white border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-transparent"
+                />
+                <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Category Buttons */}
+      <div className="px-4 py-3 md:max-w-7xl md:mx-auto md:py-6">
+        <div className="flex space-x-3 overflow-x-auto hide-scrollbar">
           <button
             onClick={() => setSelectedCategory('all')}
             className={`whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
               selectedCategory === 'all'
-                ? 'bg-white text-black'
-                : 'bg-gray-800 text-white'
+                ? 'bg-black text-white'
+                : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
             }`}
           >
             All 
@@ -194,8 +262,8 @@ export default function GymsPage() {
             onClick={() => setSelectedCategory('premium')}
             className={`whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
               selectedCategory === 'premium'
-                ? 'bg-white text-black'
-                : 'bg-gray-800 text-white'
+                ? 'bg-black text-white'
+                : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
             }`}
           >
             Premium
@@ -204,8 +272,8 @@ export default function GymsPage() {
             onClick={() => setSelectedCategory('affordable')}
             className={`whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
               selectedCategory === 'affordable'
-                ? 'bg-white text-black'
-                : 'bg-gray-800 text-white'
+                ? 'bg-black text-white'
+                : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
             }`}
           >
             Affordable
@@ -214,8 +282,8 @@ export default function GymsPage() {
             onClick={() => setSelectedCategory('budgetfriendly')}
             className={`whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
               selectedCategory === 'budgetfriendly'
-                ? 'bg-white text-black'
-                : 'bg-gray-800 text-white'
+                ? 'bg-black text-white'
+                : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
             }`}
           >
             Budget Friendly
@@ -228,32 +296,113 @@ export default function GymsPage() {
           <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></div>
         </div>
       ) : (
-        <div className="px-6 py-4 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categoryGyms.map((gym) => (
-            <Link key={gym.id} href={`/gyms/${gym.id}`} className="block rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition">
-              <div className="relative h-28 md:h-48">
-                <Image
-                  src={typeof gym.images[0] === 'string' ? gym.images[0] : ''}
-                  alt={gym.name}
-                  layout="fill"
-                  objectFit="cover"
-                  className="brightness-75"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/60 flex items-end p-4">
-                  <h3 className="text-white text-xl font-bold">{gym.name}</h3>
-                </div>
-              </div>
-            </Link>
-          ))}
+        <>
+          {/* Desktop Grid */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="hidden md:grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
+            >
+              {filteredGyms.map((gym, index) => (
+                <motion.div
+                  key={gym.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Link href={`/gyms/${gym.id}`}>
+                    <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                      <div className="relative h-64">
+                        <Image
+                          src={typeof gym.images[0] === 'string' ? gym.images[0] : ''}
+                          alt={gym.name}
+                          layout="fill"
+                          objectFit="cover"
+                          className="transition-transform duration-300 hover:scale-105"
+                        />
+                      </div>
+                      <div className="p-6">
+                        <h3 className="text-xl font-bold text-gray-900">{gym.name}</h3>
+                        <div className="mt-3 flex items-center text-gray-600">
+                          <MapPinIcon className="h-5 w-5 mr-2" />
+                          <span>{gym.location}</span>
+                        </div>
+                        <div className="mt-4">
+                          <div className="flex flex-wrap gap-2">
+                            {gym.facilities.slice(0, 3).map((facility, index) => (
+                              <span
+                                key={index}
+                                className="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800"
+                              >
+                                {facility.name}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="mt-6 flex items-center justify-between">
+                          <div className="flex items-center text-gray-700">
+                            <CalendarIcon className="h-5 w-5 mr-2" />
+                            <span className="font-medium">₹{Math.min(...gym.plans.map(p => p.price))}</span>
+                          </div>
+                          <button className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors duration-200">
+                            View Details
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Mobile Grid */}
+            <div className="md:hidden grid grid-cols-1 gap-4">
+              {filteredGyms.map((gym) => (
+                <Link key={gym.id} href={`/gyms/${gym.id}`}>
+                  <div className="relative h-28 md:h-48">
+                    <Image
+                      src={typeof gym.images[0] === 'string' ? gym.images[0] : ''}
+                      alt={gym.name}
+                      layout="fill"
+                      objectFit="cover"
+                      className="rounded-lg brightness-75"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/60 rounded-lg flex items-end p-4">
+                      <div>
+                        <h3 className="text-white text-lg font-bold">{gym.name}</h3>
+                        <div className="flex items-center text-white/90 text-sm mt-1">
+                          <MapPinIcon className="h-4 w-4 mr-1" />
+                          <span>{gym.location}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+
+      {filteredGyms.length === 0 && !loading && (
+        <div className="flex flex-col items-center justify-center h-64 text-gray-600">
+          <p className="text-xl font-semibold">No Gyms Found</p>
+          <p className="text-sm mt-2">Try selecting a different category or location</p>
         </div>
       )}
 
-      {categoryGyms.length === 0 && !loading && (
-        <div className="flex flex-col items-center justify-center h-64 text-gray-600">
-          <p className="text-xl font-semibold">No Gyms Found</p>
-          <p className="text-sm mt-2">Try selecting a different category</p>
-        </div>
-      )}
+      <style jsx global>{`
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </div>
   );
 }
