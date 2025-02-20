@@ -116,7 +116,7 @@ import Link from 'next/link';
 import { ChevronLeftIcon, MagnifyingGlassIcon, MapPinIcon, CalendarIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
-import Navbar from '@/components/Navbar';
+// import Navbar from '@/components/Navbar';
 import LocationFilter from '@/components/LocationFilter';
 import { motion } from 'framer-motion';
 
