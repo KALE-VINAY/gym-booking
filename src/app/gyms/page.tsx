@@ -116,7 +116,7 @@ import Link from 'next/link';
 import { ChevronLeftIcon, MagnifyingGlassIcon, MapPinIcon, CalendarIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
-// import Navbar from '@/components/Navbar';
+import Navbar from '@/components/Navbar';
 import LocationFilter from '@/components/LocationFilter';
 import { motion } from 'framer-motion';
 
@@ -127,15 +127,20 @@ export default function GymsPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [categoryGyms, setCategoryGyms] = useState<Gym[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [locationGyms, setLocationGyms] = useState<Gym[]>([]);
 
+  // Fetch gyms based on location
   useEffect(() => {
     const fetchGyms = async () => {
       try {
         setLoading(true);
         const fetchedGyms = await gymService.getGyms(selectedLocation);
         setGyms(fetchedGyms);
+        setLocationGyms(fetchedGyms); // Store location-specific gyms
       } catch (error) {
         console.error('Error fetching gyms:', error);
+        setGyms([]);
+        setLocationGyms([]); // Clear location gyms on error
       } finally {
         setLoading(false);
       }
@@ -143,10 +148,11 @@ export default function GymsPage() {
     fetchGyms();
   }, [selectedLocation]);
 
+  // Filter gyms by category
   useEffect(() => {
     const fetchCategoryGyms = async () => {
       if (selectedCategory === 'all') {
-        setCategoryGyms(gyms);
+        setCategoryGyms(locationGyms); // Use location-specific gyms instead of all gyms
         return;
       }
 
@@ -157,7 +163,7 @@ export default function GymsPage() {
         
         if (docSnap.exists()) {
           const gymIds = docSnap.data().uids || [];
-          const filteredGyms = gyms.filter(gym => gymIds.includes(gym.id));
+          const filteredGyms = locationGyms.filter(gym => gymIds.includes(gym.id)); // Filter from location gyms
           setCategoryGyms(filteredGyms);
         } else {
           setCategoryGyms([]);
@@ -168,22 +174,25 @@ export default function GymsPage() {
       }
     };
 
-    if (gyms.length > 0) {
+    if (locationGyms.length > 0) {
       fetchCategoryGyms();
+    } else {
+      setCategoryGyms([]); // Clear category gyms if no location gyms available
     }
-  }, [selectedCategory, gyms]);
+  }, [selectedCategory, locationGyms]); // Depend on locationGyms instead of gyms
 
   const filteredGyms = categoryGyms.filter(gym =>
     gym.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Rest of the component remains the same until the loading check
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* <Navbar /> */}
+      <Navbar />
 
       {/* Mobile Header */}
-      <div className="md:hidden  ">
-        <div className="bg-gray-900 h-20 w-full text-white py-4 px-6 flex items-center ">
+      <div className="md:hidden">
+        <div className="bg-gray-900 w-full text-white py-4 px-6 flex items-center">
           <Link href="/" className="flex items-center">
             <ChevronLeftIcon className="h-6 w-6 mr-2" />
           </Link>
@@ -193,7 +202,7 @@ export default function GymsPage() {
         {/* Mobile Search and Location */}
         <div className="p-4 bg-white shadow-sm">
           <div className="space-y-3">
-            {/* <div className="relative">
+            <div className="relative">
               <input
                 type="text"
                 value={searchTerm}
@@ -202,7 +211,7 @@ export default function GymsPage() {
                 className="w-full px-4 py-2 pr-10 text-gray-900 bg-gray-100 border-none rounded-lg focus:ring-2 focus:ring-black"
               />
               <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-            </div> */}
+            </div>
             <LocationFilter
               selectedLocation={selectedLocation}
               onChange={setSelectedLocation}
@@ -295,6 +304,18 @@ export default function GymsPage() {
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></div>
         </div>
+      ) : locationGyms.length === 0 ? (
+        // Show message when no gyms are available for the selected location
+        <div className="flex flex-col items-center justify-center h-64 text-gray-600">
+          <p className="text-xl font-semibold">No Gyms Available</p>
+          <p className="text-sm mt-2">There are currently no gyms available in this location</p>
+        </div>
+      ) : filteredGyms.length === 0 ? (
+        // Show message when no gyms match the selected category
+        <div className="flex flex-col items-center justify-center h-64 text-gray-600">
+          <p className="text-xl font-semibold">No Gyms Found</p>
+          <p className="text-sm mt-2">No gyms available in this category for the selected location</p>
+        </div>
       ) : (
         <>
           {/* Desktop Grid */}
@@ -385,13 +406,6 @@ export default function GymsPage() {
             </div>
           </div>
         </>
-      )}
-
-      {filteredGyms.length === 0 && !loading && (
-        <div className="flex flex-col items-center justify-center h-64 text-gray-600">
-          <p className="text-xl font-semibold">No Gyms Found</p>
-          <p className="text-sm mt-2">Try selecting a different category or location</p>
-        </div>
       )}
 
       <style jsx global>{`
